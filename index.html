@@ -9,7 +9,7 @@
     /* light theme (default): white ground, navy ink, crisp rules */
     --navy-950:#EEF1F8; --navy-900:#FFFFFF; --navy-800:#FFFFFF; --navy-700:#F2F4FA; --navy-600:#E4E8F4;
     --line:rgba(11,18,48,.18); --line-2:rgba(11,18,48,.40);
-    --white:#0B1230; --text:#0F1735; --text-2:#2E3A62; --muted:#5B668C;
+    --white:#0B1230; --text:#0F1735; --text-2:#26315A; --muted:#47527A;
     --orange:#F26B1D; --amber:#F5A524; --accent-text:#C2410C; --orange-soft:rgba(242,107,29,.12);
     --grid:rgba(11,18,48,.10); --overlay:rgba(11,18,48,.05); --topbar:rgba(255,255,255,.9);
     --node-in:#FFFFFF; --node-in-stroke:#0B1230; --node-proc:#FFFFFF; --node-proc-stroke:rgba(11,18,48,.5); --node-db:#EEF2FB; --node-db-stroke:#2F3F86; --node-dec:#FFF1D6; --node-dec-stroke:#D97706;
@@ -24,7 +24,7 @@
   :root[data-theme="dark"]{
     --navy-950:#070B1F; --navy-900:#0B1230; --navy-800:#111A3F; --navy-700:#1A2551; --navy-600:#25336A;
     --line:rgba(255,255,255,.12); --line-2:rgba(255,255,255,.22);
-    --white:#FFFFFF; --text:#E8ECF8; --text-2:#C3CBE6; --muted:#8E99BF;
+    --white:#FFFFFF; --text:#F1F4FC; --text-2:#D6DCF2; --muted:#AEB8DC;
     --orange:#F26B1D; --amber:#F5A524; --accent-text:#F5A524; --orange-soft:rgba(242,107,29,.16);
     --grid:rgba(255,255,255,.14); --overlay:rgba(255,255,255,.04); --topbar:rgba(11,18,48,.85);
     --node-in:#1A2551; --node-in-stroke:#3C4D8F; --node-proc:#111A3F; --node-proc-stroke:rgba(255,255,255,.28); --node-db:#0F1738; --node-db-stroke:#6C7BB5; --node-dec:#1A2551; --node-dec-stroke:#F5A524;
@@ -40,7 +40,7 @@
   .topbar,.hero,.dash,.cta{
     --navy-950:#070B1F; --navy-900:#0B1230; --navy-800:#111A3F; --navy-700:#1A2551; --navy-600:#25336A;
     --line:rgba(255,255,255,.14); --line-2:rgba(255,255,255,.26);
-    --white:#FFFFFF; --text:#E8ECF8; --text-2:#C3CBE6; --muted:#8E99BF;
+    --white:#FFFFFF; --text:#F1F4FC; --text-2:#D6DCF2; --muted:#AEB8DC;
     --accent-text:#F5A524; --overlay:rgba(255,255,255,.05); --topbar:rgba(11,18,48,.92);
     --chart-a:#6C7BB5; --chart-b:#9FB0E8; --chart-track:#1A2551; --chart-budget:#3C4D8F; --chart-c:#FFD27A;
     --down:#FF8A65; --globe-grid:rgba(255,255,255,0.10); --shadow:0 0 0 rgba(0,0,0,0);
@@ -60,7 +60,7 @@
   a{color:inherit}
   .grad{background:linear-gradient(90deg,var(--orange),var(--amber)); -webkit-background-clip:text; background-clip:text; color:transparent}
   .light{font-family:"Source Sans 3",sans-serif; font-style:italic; font-weight:300; color:var(--text-2); letter-spacing:-0.01em}
-  .eyebrow{font-family:"JetBrains Mono",ui-monospace,Consolas,monospace; font-size:.72rem; letter-spacing:.18em; text-transform:uppercase; color:var(--accent-text); font-weight:500}
+  .eyebrow{font-family:"JetBrains Mono",ui-monospace,Consolas,monospace; font-size:.8rem; letter-spacing:.18em; text-transform:uppercase; color:var(--accent-text); font-weight:500}
   .pill{display:inline-flex; align-items:center; gap:10px; padding:8px 18px; border:1px solid var(--line-2); border-radius:999px; background:var(--overlay); font-family:"JetBrains Mono",monospace; font-size:.74rem; letter-spacing:.2em; text-transform:uppercase; color:var(--accent-text)}
   .pill::before{content:""; width:8px; height:8px; border-radius:50%; background:var(--orange); box-shadow:0 0 12px var(--orange)}
   .btn{display:inline-flex; align-items:center; gap:10px; padding:16px 30px; border-radius:999px; font-family:"Manrope",sans-serif; font-weight:700; font-size:1rem; text-decoration:none; border:1px solid transparent}
@@ -286,9 +286,9 @@
   .slide .head h2{font-size:clamp(1.6rem,3.3vw,2.7rem)}
   .slide .head .tag{font-family:"Source Sans 3",sans-serif; font-style:italic; font-weight:400; color:var(--accent-text); font-size:clamp(1rem,1.5vw,1.25rem); margin-top:6px}
   .slide .body{min-height:0; overflow:auto; padding-right:4px}
-  .slide .num{position:absolute; bottom:2.6vh; right:150px; font-family:"JetBrains Mono",monospace; font-size:.7rem; letter-spacing:.14em; color:var(--muted); font-variant-numeric:tabular-nums}
+  .slide .num{position:absolute; bottom:2.6vh; right:150px; font-family:"JetBrains Mono",monospace; font-size:.78rem; letter-spacing:.14em; color:var(--muted); font-variant-numeric:tabular-nums}
   .slide.cover::after,.slide.closing::after,.slide.cover .num,.slide.closing .num{display:none}
-  .slide::after{content:var(--deck-foot,"DataMartBD Limited \00b7 DM Enterprize Suite"); position:absolute; bottom:2.6vh; left:6vw; font-family:"JetBrains Mono",monospace; font-size:.66rem; letter-spacing:.14em; text-transform:uppercase; color:var(--muted)}
+  .slide::after{content:var(--deck-foot,"DataMartBD Limited \00b7 DM Enterprize Suite"); position:absolute; bottom:2.6vh; left:6vw; font-family:"JetBrains Mono",monospace; font-size:.72rem; letter-spacing:.14em; text-transform:uppercase; color:var(--muted)}
   /* cover + closing */
   .slide.cover,.slide.closing{display:block; padding:0}
   .slide.cover canvas{position:absolute; inset:0; width:100%; height:100%; display:block}
@@ -339,7 +339,7 @@
   .slide.cover,.slide.closing,.chrome{
     --navy-950:#070B1F; --navy-900:#0B1230; --navy-800:#111A3F; --navy-700:#1A2551; --navy-600:#25336A;
     --line:rgba(255,255,255,.14); --line-2:rgba(255,255,255,.26);
-    --white:#FFFFFF; --text:#E8ECF8; --text-2:#C3CBE6; --muted:#8E99BF;
+    --white:#FFFFFF; --text:#F1F4FC; --text-2:#D6DCF2; --muted:#AEB8DC;
     --accent-text:#F5A524; --overlay:rgba(255,255,255,.05); --topbar:rgba(11,18,48,.92); --globe-grid:rgba(255,255,255,0.10); --shadow:0 0 0 rgba(0,0,0,0);
     color-scheme:dark;
   }
@@ -361,7 +361,7 @@
   .shots{display:flex; gap:clamp(18px,3vw,46px); align-items:flex-start; justify-content:center; height:100%; flex-wrap:wrap}
   .shot{display:flex; flex-direction:column; align-items:center; gap:10px; min-width:0; max-height:100%}
   .shot img{display:block; max-width:100%; object-fit:contain; border-radius:10px; border:1px solid var(--line-2); background:#FFFFFF; box-shadow:var(--shadow)}
-  .shot .cap{font-family:"JetBrains Mono",monospace; font-size:.66rem; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); text-align:center; max-width:34rem}
+  .shot .cap{font-family:"JetBrains Mono",monospace; font-size:.74rem; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); text-align:center; max-width:34rem}
   .shot .cap b{display:block; font-family:"Manrope",sans-serif; font-weight:700; font-size:.92rem; letter-spacing:-0.01em; text-transform:none; color:var(--white); margin-bottom:3px}
   /* --bh is the slide body's real height, set by script on every resize */
   .shots.wide{align-items:center}
@@ -375,15 +375,15 @@
   /* numbered cards */
   .steps{display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:16px; align-content:start}
   .steps div{position:relative; padding:20px 18px 18px; border:1px solid var(--line); border-radius:14px; background:var(--navy-800)}
-  .steps span{display:block; font-family:"JetBrains Mono",monospace; font-size:.7rem; letter-spacing:.2em; color:var(--accent-text); margin-bottom:9px}
-  .steps h4{font-size:1.02rem; line-height:1.25}
-  .steps p{margin-top:7px; font-size:.9rem; color:var(--text-2); line-height:1.45}
-  .steps.tight{grid-template-columns:repeat(6,minmax(0,1fr)); gap:12px}
-  .steps.tight div{padding:14px 13px 13px}
-  .steps.tight h4{font-size:.94rem}
-  .steps.tight p{font-size:.8rem; margin-top:5px}
-  .steps.tight p.wc{font-family:"JetBrains Mono",monospace; font-size:.62rem; letter-spacing:.08em; text-transform:uppercase; color:var(--muted)}
-  @media (max-width:1100px){ .steps.tight{grid-template-columns:repeat(4,minmax(0,1fr))} }
+  .steps span{display:block; font-family:"JetBrains Mono",monospace; font-size:.82rem; letter-spacing:.2em; color:var(--accent-text); margin-bottom:9px}
+  .steps h4{font-size:1.15rem; line-height:1.25}
+  .steps p{margin-top:7px; font-size:1rem; color:var(--text-2); line-height:1.5}
+  .steps.tight{grid-template-columns:repeat(4,minmax(0,1fr)); gap:14px}
+  .steps.tight div{padding:16px 20px 14px}
+  .steps.tight h4{font-size:clamp(1.05rem,1.35vw,1.3rem)}
+  .steps.tight p{font-size:clamp(.95rem,1.1vw,1.08rem); margin-top:6px}
+  .steps.tight p.wc{font-family:"JetBrains Mono",monospace; font-size:clamp(.74rem,.85vw,.82rem); letter-spacing:.08em; text-transform:uppercase; color:var(--muted); margin-top:10px; padding-top:9px; border-top:1px solid var(--line)}
+  @media (max-width:1100px){ .steps.tight{grid-template-columns:repeat(3,minmax(0,1fr))} }
   @media (max-width:700px){ .steps.tight{grid-template-columns:repeat(2,minmax(0,1fr))} }
 
   /* index of short lists */
@@ -407,16 +407,16 @@
 
   /* bullets inside a prose column */
   .prose ul{margin:14px 0 0; padding:0; list-style:none}
-  .prose ul li{position:relative; padding:7px 0 7px 20px; font-size:.97rem; color:var(--text-2); border-bottom:1px solid var(--line)}
+  .prose ul li{position:relative; padding:7px 0 7px 20px; font-size:1.04rem; color:var(--text-2); border-bottom:1px solid var(--line)}
   .prose ul li:last-child{border-bottom:0}
   .prose ul li::before{content:""; position:absolute; left:2px; top:16px; width:7px; height:7px; border-radius:2px; background:var(--orange)}
   .prose p+ul{margin-top:10px}
   .two .steps{margin-top:18px; grid-template-columns:1fr}
 
   /* field / value table beside a screen */
-  table.kv{width:100%; border-collapse:collapse; margin-top:14px; font-size:.92rem}
+  table.kv{width:100%; border-collapse:collapse; margin-top:14px; font-size:1rem}
   table.kv td{padding:7px 10px 7px 0; border-bottom:1px solid var(--line); vertical-align:top; color:var(--text-2)}
-  table.kv td:first-child{font-family:"JetBrains Mono",monospace; font-size:.68rem; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); white-space:nowrap; padding-top:10px}
+  table.kv td:first-child{font-family:"JetBrains Mono",monospace; font-size:.76rem; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); white-space:nowrap; padding-top:10px}
   table.kv tr:last-child td{border-bottom:0}
   .check{display:flex; flex-wrap:wrap; gap:8px; margin-top:14px}
   .check span{font-family:"JetBrains Mono",monospace; font-size:.72rem; letter-spacing:.06em; padding:6px 10px; border-radius:999px; border:1px solid var(--line-2); color:var(--white)}
@@ -432,7 +432,7 @@
 
   .stacked{display:grid; gap:clamp(16px,3vh,30px); align-content:start}
   .stacked h4.blocktitle{font-size:1rem; margin-bottom:10px}
-  .shotnote{margin-top:12px; color:var(--muted); font-size:.88rem}
+  .shotnote{margin-top:16px; color:var(--text-2); font-size:1rem}
 
 </style>
 
