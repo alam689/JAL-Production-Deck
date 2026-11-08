@@ -453,6 +453,25 @@
   .stacked h4.blocktitle{font-size:1rem; margin-bottom:10px}
   .shotnote{margin-top:16px; color:var(--text-2); font-size:1rem}
 
+  /* ================= screenshot zoom viewer ================= */
+  .shot img,.cover-shot img{cursor:zoom-in; transition:box-shadow .15s ease, transform .15s ease}
+  .shot img:hover,.cover-shot img:hover{box-shadow:0 0 0 3px var(--orange), var(--shadow)}
+  .zoom-hint{position:fixed; z-index:29; pointer-events:none; padding:5px 10px; border-radius:999px; background:rgba(11,18,48,.88); color:#fff; font-family:"JetBrains Mono",monospace; font-size:.7rem; letter-spacing:.1em; text-transform:uppercase; opacity:0; transition:opacity .15s ease}
+  .zoom-hint.on{opacity:1}
+  #zoom{position:fixed; inset:0; z-index:100; background:rgba(5,8,22,.97); backdrop-filter:blur(6px); display:flex; flex-direction:column; color:#fff; touch-action:none}
+  #zoom[hidden]{display:none}
+  #zoom .zstage{position:relative; flex:1 1 auto; overflow:hidden; cursor:grab}
+  #zoom .zstage.drag{cursor:grabbing}
+  #zoom .zstage img{position:absolute; left:0; top:0; transform-origin:0 0; max-width:none; max-height:none; border-radius:6px; background:#fff; box-shadow:0 20px 60px rgba(0,0,0,.5); user-select:none; -webkit-user-drag:none; will-change:transform}
+  #zoom .zbar{flex:0 0 auto; display:flex; flex-wrap:wrap; align-items:center; justify-content:center; gap:8px; padding:12px 16px 16px; font-family:"JetBrains Mono",monospace; font-size:.74rem; letter-spacing:.08em}
+  #zoom .zbar button{min-width:40px; height:36px; padding:0 14px; border-radius:999px; border:1px solid rgba(255,255,255,.28); background:rgba(255,255,255,.08); color:#fff; font:inherit; text-transform:uppercase; cursor:pointer}
+  #zoom .zbar button:hover{background:rgba(255,255,255,.18)}
+  #zoom .zbar button.big{font-size:1.1rem; padding:0 12px}
+  #zoom .zbar button.close{border-color:#F26B1D; color:#FFB27A}
+  #zoom .zpct{min-width:64px; text-align:center; font-variant-numeric:tabular-nums; color:#F5A524}
+  #zoom .zcap{flex-basis:100%; text-align:center; color:#C3CBE6; font-family:"Source Sans 3",sans-serif; font-size:.95rem; letter-spacing:0; margin-bottom:2px}
+  #zoom .zhelp{flex-basis:100%; text-align:center; color:#8E99BF; font-size:.66rem; letter-spacing:.1em; text-transform:uppercase}
+  @media (max-width:700px){ #zoom .zhelp{display:none} }
 </style>
 
 <div class="chrome">
@@ -524,6 +543,20 @@
 </div>
 
 <div class="arrows"><button id="prev" type="button" aria-label="Previous slide">&larr;</button><button id="next" type="button" aria-label="Next slide">&rarr;</button></div>
+<div id="zoom" hidden role="dialog" aria-modal="true" aria-label="Screenshot viewer">
+  <div class="zstage"><img alt=""></div>
+  <div class="zbar">
+    <div class="zcap"></div>
+    <button type="button" class="big" data-z="out" aria-label="Zoom out">&minus;</button>
+    <span class="zpct">100%</span>
+    <button type="button" class="big" data-z="in" aria-label="Zoom in">+</button>
+    <button type="button" data-z="fit">Fit</button>
+    <button type="button" data-z="actual">Actual size</button>
+    <button type="button" class="close" data-z="close">Close &times;</button>
+    <div class="zhelp">Scroll or pinch to zoom &middot; drag to move &middot; double-click to zoom in/out &middot; Esc to close</div>
+  </div>
+</div>
+<div class="zoom-hint" id="zoomHint">Click to zoom</div>
 <div class="overview" id="overview" hidden><button class="ctl close" id="ovClose" type="button">Close (Esc)</button><ol><li><a href="#top"><span>01</span>Cover</a></li><li><a href="#dashboard"><span>02</span>Executive dashboard</a></li><li><a href="#warehouse"><span>03</span>Warehouse stock</a></li><li><a href="#dash-output"><span>04</span>Output &amp; alerts</a></li><li><a href="#dash-yield"><span>05</span>Yield &amp; downtime</a></li><li><a href="#dash-orders"><span>06</span>Orders &amp; FG stock</a></li><li><a href="#stages"><span>07</span>Twelve stages</a></li><li><a href="#five-steps"><span>08</span>Five steps</a></li><li><a href="#flow-plan"><span>09</span>Flow · Contract to orders</a></li><li><a href="#flow-floor"><span>10</span>Flow · Release to close</a></li><li><a href="#use-cases"><span>11</span>Three use cases</a></li><li><a href="#sign-in"><span>12</span>Sign in</a></li><li><a href="#home"><span>13</span>Executive dashboard</a></li><li><a href="#uc1-bom"><span>14</span>UC1 · BOM</a></li><li><a href="#uc1-routing"><span>15</span>UC1 · Routing</a></li><li><a href="#uc1-mrp-form"><span>16</span>UC1 · Run MRP</a></li><li><a href="#uc1-mrp"><span>17</span>UC1 · MRP result</a></li><li><a href="#uc1-planned"><span>18</span>UC1 · Planned orders</a></li><li><a href="#uc1-release"><span>19</span>UC1 · Release</a></li><li><a href="#uc1-refused"><span>20</span>UC1 · Entry refused</a></li><li><a href="#uc1-batching"><span>21</span>UC1 · Batching shift</a></li><li><a href="#uc1-progress"><span>22</span>UC1 · In progress</a></li><li><a href="#uc1-sewing"><span>23</span>UC1 · Sewing shift</a></li><li><a href="#uc2-mrp"><span>24</span>UC2 · MRP</a></li><li><a href="#uc2-order"><span>25</span>UC2 · Weaving order</a></li><li><a href="#uc2-shift"><span>26</span>UC2 · Loom shift</a></li><li><a href="#uc2-progress"><span>27</span>UC2 · Availability</a></li><li><a href="#uc3-routes"><span>28</span>UC3 · Product routes</a></li><li><a href="#uc3-mrp"><span>29</span>UC3 · MRP for stock</a></li><li><a href="#uc3-shift"><span>30</span>UC3 · Winding shift</a></li><li><a href="#uc3-close"><span>31</span>UC3 · Complete & close</a></li><li><a href="#board"><span>32</span>Daily board</a></li><li><a href="#process"><span>33</span>Production process</a></li><li><a href="#supervisor"><span>34</span>Line supervisor</a></li><li><a href="#reference"><span>35</span>Quick reference</a></li><li><a href="#limits"><span>36</span>Prototype limits</a></li><li><a href="#next"><span>37</span>Thank you</a></li></ol></div>
 
 <script>
@@ -714,6 +747,60 @@
   addEventListener('load', measure);
   if(document.fonts && document.fonts.ready) document.fonts.ready.then(measure);
   measure();
+})();
+
+/* ---------- screenshot zoom viewer ---------- */
+(function(){
+  var box=document.getElementById('zoom'); if(!box) return;
+  var stage=box.querySelector('.zstage'), img=stage.querySelector('img'), pct=box.querySelector('.zpct'), cap=box.querySelector('.zcap'), hint=document.getElementById('zoomHint');
+  var s=1, x=0, y=0, fitS=1, minS=.1, maxS=6, last=null, ptrs={}, pinch=null, opener=null;
+  function apply(){ img.style.transform='translate('+x+'px,'+y+'px) scale('+s+')'; pct.textContent=Math.round(s/fitS*100)+'%'; }
+  function bounds(){ var r=stage.getBoundingClientRect(); return {w:r.width,h:r.height,l:r.left,t:r.top}; }
+  function clampPan(){ var b=bounds(), w=img.naturalWidth*s, h=img.naturalHeight*s, m=60;
+    x = w<=b.w ? (b.w-w)/2 : Math.min(m, Math.max(b.w-w-m, x));
+    y = h<=b.h ? (b.h-h)/2 : Math.min(m, Math.max(b.h-h-m, y)); }
+  function fit(){ var b=bounds(); fitS=Math.min((b.w-48)/img.naturalWidth,(b.h-32)/img.naturalHeight); minS=fitS*.5; maxS=Math.max(fitS*8,2); s=fitS; clampPan(); apply(); }
+  function zoomAt(ns,cx,cy){ var b=bounds(); ns=Math.min(maxS,Math.max(minS,ns)); if(cx==null){cx=b.w/2; cy=b.h/2;}
+    x=cx-(cx-x)*(ns/s); y=cy-(cy-y)*(ns/s); s=ns; clampPan(); apply(); }
+  function open(src,alt,from){ opener=from||null; cap.textContent=alt||''; img.alt=alt||'Screenshot';
+    box.hidden=false; document.documentElement.style.overflow='hidden';
+    var go=function(){ fit(); box.querySelector('[data-z=close]').focus({preventScroll:true}); };
+    if(img.getAttribute('src')===src && img.complete) go(); else { img.onload=go; img.src=src; } }
+  function close(){ box.hidden=true; document.documentElement.style.overflow=''; if(opener) try{ opener.focus({preventScroll:true}); }catch(e){} }
+
+  function hookable(el){ return el && el.tagName==='IMG' && el.closest('.shot, .cover-shot'); }
+  document.addEventListener('click',function(e){ var t=e.target; if(!hookable(t)) return;
+    var sh=t.closest('.shot'), c=sh&&sh.querySelector('.cap b'), label=(c?c.textContent:'')||t.alt||'';
+    var sl=t.closest('.slide'), h=sl&&sl.querySelector('.head h2'); if(h && (!c)) label=h.textContent.trim();
+    hint.classList.remove('on'); open(t.currentSrc||t.src,label,t); });
+  document.addEventListener('mouseover',function(e){ if(hookable(e.target)) hint.classList.add('on'); });
+  document.addEventListener('mouseout',function(e){ if(hookable(e.target)) hint.classList.remove('on'); });
+  document.addEventListener('mousemove',function(e){ if(hint.classList.contains('on')){ hint.style.left=(e.clientX+16)+'px'; hint.style.top=(e.clientY+18)+'px'; } });
+  document.querySelectorAll('.shot img, .cover-shot img').forEach(function(i){ i.setAttribute('tabindex','0'); i.setAttribute('role','button'); i.setAttribute('aria-label',(i.alt||'Screenshot')+' — open zoom view'); });
+  document.addEventListener('keydown',function(e){ if(!box.hidden) return; if((e.key==='Enter'||e.key===' ') && hookable(document.activeElement)){ e.preventDefault(); document.activeElement.click(); } });
+
+  box.querySelector('.zbar').addEventListener('click',function(e){ var b=e.target.closest('button'); if(!b) return; var z=b.getAttribute('data-z');
+    if(z==='in') zoomAt(s*1.4); else if(z==='out') zoomAt(s/1.4); else if(z==='fit') fit(); else if(z==='actual') zoomAt(1); else if(z==='close') close(); });
+  stage.addEventListener('wheel',function(e){ e.preventDefault(); var b=bounds(); var k=Math.exp(-e.deltaY*(e.ctrlKey?0.01:0.0011)); zoomAt(s*k,e.clientX-b.l,e.clientY-b.t); },{passive:false});
+  stage.addEventListener('dblclick',function(e){ var b=bounds(); zoomAt(s>fitS*1.2?fitS:fitS*2.5,e.clientX-b.l,e.clientY-b.t); if(s===fitS) fit(); });
+  stage.addEventListener('pointerdown',function(e){ stage.setPointerCapture(e.pointerId); ptrs[e.pointerId]={x:e.clientX,y:e.clientY};
+    var k=Object.keys(ptrs); if(k.length===2){ var a=ptrs[k[0]],c=ptrs[k[1]]; pinch={d:Math.hypot(a.x-c.x,a.y-c.y),s:s}; last=null; } else { last={x:e.clientX,y:e.clientY}; stage.classList.add('drag'); } });
+  stage.addEventListener('pointermove',function(e){ if(!ptrs[e.pointerId]) return; ptrs[e.pointerId]={x:e.clientX,y:e.clientY};
+    var k=Object.keys(ptrs);
+    if(pinch && k.length===2){ var a=ptrs[k[0]],c=ptrs[k[1]],b=bounds(); zoomAt(pinch.s*Math.hypot(a.x-c.x,a.y-c.y)/pinch.d,(a.x+c.x)/2-b.l,(a.y+c.y)/2-b.t); return; }
+    if(last){ x+=e.clientX-last.x; y+=e.clientY-last.y; last={x:e.clientX,y:e.clientY}; clampPan(); apply(); } });
+  function up(e){ delete ptrs[e.pointerId]; if(Object.keys(ptrs).length<2) pinch=null; if(!Object.keys(ptrs).length){ last=null; stage.classList.remove('drag'); } }
+  stage.addEventListener('pointerup',up); stage.addEventListener('pointercancel',up);
+  // keys while open: handle here and stop the deck from changing slide
+  window.addEventListener('keydown',function(e){ if(box.hidden) return; var k=e.key, step=80, handled=true;
+    if(k==='Escape') close(); else if(k==='+'||k==='=') zoomAt(s*1.4); else if(k==='-'||k==='_') zoomAt(s/1.4); else if(k==='0') fit(); else if(k==='1') zoomAt(1);
+    else if(k==='ArrowLeft'){ x+=step; clampPan(); apply(); } else if(k==='ArrowRight'){ x-=step; clampPan(); apply(); }
+    else if(k==='ArrowUp'){ y+=step; clampPan(); apply(); } else if(k==='ArrowDown'){ y-=step; clampPan(); apply(); }
+    else if(k==='Tab'){ var bs=[].slice.call(box.querySelectorAll('button')), i=bs.indexOf(document.activeElement); e.preventDefault(); bs[(i+(e.shiftKey?-1:1)+bs.length)%bs.length].focus(); }
+    else if(k===' '||k==='Enter'){ handled=document.activeElement&&box.contains(document.activeElement); if(handled) return; handled=true; }
+    else handled=k.length===1||k.indexOf('Page')===0||k==='Home'||k==='End';
+    if(handled){ e.stopImmediatePropagation(); if(k!=='Tab') e.preventDefault(); } },true);
+  addEventListener('resize',function(){ if(!box.hidden) fit(); });
 })();
 </script>
 <script src="brand.js" defer></script>
