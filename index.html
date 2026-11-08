@@ -1,0 +1,697 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>JAL ERP — Production</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;700;800&family=Source+Sans+3:ital,wght@0,400;0,500;0,600;1,300;1,400&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    /* light theme (default): white ground, navy ink, crisp rules */
+    --navy-950:#EEF1F8; --navy-900:#FFFFFF; --navy-800:#FFFFFF; --navy-700:#F2F4FA; --navy-600:#E4E8F4;
+    --line:rgba(11,18,48,.18); --line-2:rgba(11,18,48,.40);
+    --white:#0B1230; --text:#0F1735; --text-2:#2E3A62; --muted:#5B668C;
+    --orange:#F26B1D; --amber:#F5A524; --accent-text:#C2410C; --orange-soft:rgba(242,107,29,.12);
+    --grid:rgba(11,18,48,.10); --overlay:rgba(11,18,48,.05); --topbar:rgba(255,255,255,.9);
+    --node-in:#FFFFFF; --node-in-stroke:#0B1230; --node-proc:#FFFFFF; --node-proc-stroke:rgba(11,18,48,.5); --node-db:#EEF2FB; --node-db-stroke:#2F3F86; --node-dec:#FFF1D6; --node-dec-stroke:#D97706;
+    --edge:rgba(11,18,48,.62); --ntext:#0B1230; --on-out:#0B1230;
+    --hub-node:#FFFFFF; --hub-text:#0B1230; --hub-line:rgba(11,18,48,.24); --hub-ring:rgba(11,18,48,.22);
+    --c-fin:#D97706; --c-sc:#B7791F; --c-mfg:#0B1230; --c-hr:#2F55C9; --c-crm:#6D3FCC;
+    --chart-a:#5B6BB0; --chart-b:#8DA0E6; --chart-track:#E3E8F5; --chart-budget:#3C4D8F; --chart-c:#FFB84D;
+    --down:#C2410C; --globe-grid:rgba(11,18,48,0.12);
+    --dot:rgba(11,18,48,.16); --shadow:0 1px 0 rgba(11,18,48,.06), 0 14px 34px rgba(11,18,48,.08);
+    color-scheme: light;
+  }
+  :root[data-theme="dark"]{
+    --navy-950:#070B1F; --navy-900:#0B1230; --navy-800:#111A3F; --navy-700:#1A2551; --navy-600:#25336A;
+    --line:rgba(255,255,255,.12); --line-2:rgba(255,255,255,.22);
+    --white:#FFFFFF; --text:#E8ECF8; --text-2:#C3CBE6; --muted:#8E99BF;
+    --orange:#F26B1D; --amber:#F5A524; --accent-text:#F5A524; --orange-soft:rgba(242,107,29,.16);
+    --grid:rgba(255,255,255,.14); --overlay:rgba(255,255,255,.04); --topbar:rgba(11,18,48,.85);
+    --node-in:#1A2551; --node-in-stroke:#3C4D8F; --node-proc:#111A3F; --node-proc-stroke:rgba(255,255,255,.28); --node-db:#0F1738; --node-db-stroke:#6C7BB5; --node-dec:#1A2551; --node-dec-stroke:#F5A524;
+    --edge:rgba(255,255,255,.34); --ntext:#E8ECF8; --on-out:#0B1230;
+    --hub-node:#111A3F; --hub-text:#E8ECF8; --hub-line:rgba(255,255,255,.16); --hub-ring:rgba(255,255,255,.10);
+    --c-fin:#F5A524; --c-sc:#FFD27A; --c-mfg:#FFFFFF; --c-hr:#9FB0E8; --c-crm:#6C7BB5;
+    --chart-a:#6C7BB5; --chart-b:#9FB0E8; --chart-track:#1A2551; --chart-budget:#3C4D8F; --chart-c:#FFD27A;
+    --down:#FF8A65; --globe-grid:rgba(255,255,255,0.10);
+    --dot:rgba(255,255,255,.07); --shadow:0 0 0 rgba(0,0,0,0);
+    color-scheme: dark;
+  }
+  /* brand bands stay navy in both themes: top bar, hero, dashboard screen, closing call */
+  .topbar,.hero,.dash,.cta{
+    --navy-950:#070B1F; --navy-900:#0B1230; --navy-800:#111A3F; --navy-700:#1A2551; --navy-600:#25336A;
+    --line:rgba(255,255,255,.14); --line-2:rgba(255,255,255,.26);
+    --white:#FFFFFF; --text:#E8ECF8; --text-2:#C3CBE6; --muted:#8E99BF;
+    --accent-text:#F5A524; --overlay:rgba(255,255,255,.05); --topbar:rgba(11,18,48,.92);
+    --chart-a:#6C7BB5; --chart-b:#9FB0E8; --chart-track:#1A2551; --chart-budget:#3C4D8F; --chart-c:#FFD27A;
+    --down:#FF8A65; --globe-grid:rgba(255,255,255,0.10); --shadow:0 0 0 rgba(0,0,0,0);
+    color-scheme: dark;
+  }
+  :root:not([data-theme="dark"]) .light{font-weight:400}
+  *,*::before,*::after{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  @media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto} *{animation:none !important; transition:none !important} }
+  body{margin:0; background:var(--navy-900); color:var(--text); font-family:"Source Sans 3","Segoe UI",system-ui,Arial,sans-serif; font-size:17px; line-height:1.6; -webkit-font-smoothing:antialiased}
+  h1,h2,h3,h4{font-family:"Manrope","Segoe UI",system-ui,Arial,sans-serif; color:var(--white); margin:0; line-height:1.1; letter-spacing:-0.015em; text-wrap:balance}
+  h1{font-size:clamp(2.8rem,6.2vw,5rem); font-weight:800; line-height:1.0; letter-spacing:-0.03em}
+  h2{font-size:clamp(1.9rem,3.6vw,2.7rem); font-weight:800}
+  h3{font-size:1.4rem; font-weight:700}
+  h4{font-size:1.02rem; font-weight:700}
+  p{margin:0}
+  a{color:inherit}
+  .grad{background:linear-gradient(90deg,var(--orange),var(--amber)); -webkit-background-clip:text; background-clip:text; color:transparent}
+  .light{font-family:"Source Sans 3",sans-serif; font-style:italic; font-weight:300; color:var(--text-2); letter-spacing:-0.01em}
+  .eyebrow{font-family:"JetBrains Mono",ui-monospace,Consolas,monospace; font-size:.72rem; letter-spacing:.18em; text-transform:uppercase; color:var(--accent-text); font-weight:500}
+  .pill{display:inline-flex; align-items:center; gap:10px; padding:8px 18px; border:1px solid var(--line-2); border-radius:999px; background:var(--overlay); font-family:"JetBrains Mono",monospace; font-size:.74rem; letter-spacing:.2em; text-transform:uppercase; color:var(--accent-text)}
+  .pill::before{content:""; width:8px; height:8px; border-radius:50%; background:var(--orange); box-shadow:0 0 12px var(--orange)}
+  .btn{display:inline-flex; align-items:center; gap:10px; padding:16px 30px; border-radius:999px; font-family:"Manrope",sans-serif; font-weight:700; font-size:1rem; text-decoration:none; border:1px solid transparent}
+  .btn.primary{background:var(--orange); color:#FFFFFF; box-shadow:0 10px 30px rgba(242,107,29,.35)}
+  .btn.primary:hover{background:#FF7A2E}
+  .btn.ghost{border-color:var(--line-2); color:var(--white); background:var(--overlay)}
+  .btn.ghost:hover{border-color:var(--white)}
+  .btn:focus-visible,a:focus-visible{outline:2px solid var(--amber); outline-offset:3px}
+
+  /* top bar */
+  .topbar{position:sticky; top:0; z-index:20; background:var(--topbar); backdrop-filter:blur(10px); border-bottom:1px solid var(--line)}
+  .topbar .in{max-width:1400px; margin:0 auto; padding:16px 32px; display:flex; align-items:center; justify-content:space-between; gap:24px}
+  .wordmark{font-family:"Manrope",sans-serif; font-weight:800; font-size:1.35rem; color:var(--white); text-decoration:none; letter-spacing:-0.02em}
+  .wordmark span{color:var(--orange)}
+  .topnav{display:flex; gap:30px; list-style:none; margin:0; padding:0}
+  .topnav a{text-decoration:none; color:var(--text-2); font-weight:500; font-size:.98rem}
+  .topnav a:hover{color:var(--white)}
+  @media (max-width:820px){ .topnav{display:none} }
+  .topbar .right{display:flex; align-items:center; gap:22px}
+  .theme{display:inline-flex; align-items:center; gap:8px; padding:8px 14px; border-radius:999px; border:1px solid var(--line-2); background:var(--overlay); color:var(--white); font-family:"JetBrains Mono",monospace; font-size:.7rem; letter-spacing:.12em; text-transform:uppercase; cursor:pointer}
+  .theme:hover{border-color:var(--orange)}
+  .theme:focus-visible{outline:2px solid var(--amber); outline-offset:3px}
+  .theme i{width:10px; height:10px; border-radius:50%; background:var(--orange); box-shadow:0 0 10px var(--orange)}
+  :root[data-theme="dark"] .theme i{background:var(--amber); box-shadow:0 0 10px var(--amber)}
+
+  /* hero */
+  .hero{position:relative; overflow:hidden; border-bottom:1px solid var(--line); background:radial-gradient(1200px 600px at 85% 40%, rgba(242,107,29,.10), transparent 60%), var(--navy-900)}
+  .hero canvas{position:absolute; inset:0; width:100%; height:100%; display:block}
+  .hero .in{position:relative; max-width:1400px; margin:0 auto; padding:96px 32px 72px; display:grid; grid-template-columns:minmax(0,640px) 1fr; gap:40px}
+  @media (max-width:900px){ .hero .in{grid-template-columns:1fr; padding:64px 24px 56px} }
+  .hero .pill{margin-bottom:34px}
+  .hero h1 .light{display:block; font-size:.92em}
+  .hero .lede{margin-top:30px; font-size:1.25rem; line-height:1.55; color:var(--text-2); max-width:36rem}
+  .hero .ctas{display:flex; gap:16px; flex-wrap:wrap; margin-top:40px}
+  .hero .meta{margin-top:56px; display:grid; grid-template-columns:repeat(4,auto); justify-content:start; gap:0 44px; padding-top:22px; border-top:1px solid var(--line)}
+  .hero .meta strong{display:block; font-family:"Manrope",sans-serif; font-size:1.9rem; font-weight:800; color:var(--white); line-height:1.1; font-variant-numeric:tabular-nums}
+  .hero .meta span{font-size:.86rem; color:var(--muted); letter-spacing:.04em}
+  @media (max-width:560px){ .hero .meta{grid-template-columns:1fr 1fr; gap:18px 24px} }
+
+  /* shell */
+  .shell{display:grid; grid-template-columns:1fr; max-width:1400px; margin:0 auto; padding:0 32px}
+  @media (min-width:1150px){ .shell{grid-template-columns:240px minmax(0,1fr); gap:56px} }
+  .rail{display:none}
+  @media (min-width:1150px){ .rail{display:block; position:sticky; top:72px; align-self:start; max-height:calc(100vh - 72px); overflow:auto; scrollbar-width:thin; scrollbar-color:var(--navy-600) transparent; padding:40px 16px 40px 0; border-right:1px solid var(--line)} }
+  .rail .group{margin-bottom:18px}
+  .rail .group .eyebrow{display:block; margin-bottom:6px; font-size:.66rem}
+  .rail ul{list-style:none; margin:0; padding:0}
+  .rail li a{display:block; padding:5px 0 5px 12px; font-size:.9rem; color:var(--text-2); text-decoration:none; border-left:2px solid var(--line); line-height:1.3}
+  .rail li a:hover{color:var(--white); border-left-color:var(--muted)}
+  .rail li a.active{color:var(--white); border-left-color:var(--orange); font-weight:600}
+  main{min-width:0; padding-bottom:96px}
+  section{padding:64px 0; border-bottom:1px solid var(--line); scroll-margin-top:80px}
+  section:last-of-type{border-bottom:0}
+  .sec-head{margin-bottom:28px}
+  .sec-head .eyebrow{display:block; margin-bottom:12px}
+  .sec-head .eyebrow::before{content:""; display:inline-block; width:26px; height:2px; background:var(--orange); vertical-align:middle; margin-right:10px}
+  .sec-head .sub{max-width:46rem; margin-top:14px; color:var(--text-2); font-size:1.1rem}
+  .prose{max-width:44rem; color:var(--text-2)}
+  .prose + .prose{margin-top:14px}
+
+  /* cards */
+  .cards{display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:18px; margin-top:8px}
+  .card{background:linear-gradient(180deg,var(--navy-800),var(--navy-900)); border:1px solid var(--line); border-radius:16px; padding:24px; box-shadow:var(--shadow)}
+  .card h3{font-size:1.15rem; margin:10px 0 8px}
+  .card p{color:var(--text-2); font-size:.97rem}
+  .card .ic{width:40px; height:40px; border-radius:10px; background:var(--orange-soft); display:grid; place-items:center; color:var(--orange); font-family:"JetBrains Mono",monospace; font-size:.8rem; font-weight:500}
+
+  /* hub */
+  .hubwrap{display:grid; grid-template-columns:minmax(0,1fr) 300px; gap:36px; align-items:center; margin-top:8px}
+  @media (max-width:980px){ .hubwrap{grid-template-columns:1fr} }
+  .hub{background:radial-gradient(closest-side, rgba(242,107,29,.12), transparent 70%), radial-gradient(var(--dot) 1px, transparent 1.4px) 0 0/16px 16px; overflow-x:auto; border-radius:20px}
+  .hub svg{display:block; max-width:100%; height:auto; margin:0 auto}
+  .legend{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:12px}
+  .legend li{display:grid; grid-template-columns:14px 1fr; gap:12px; align-items:start; font-size:.95rem; color:var(--text-2)}
+  .legend li i{width:14px; height:14px; border-radius:4px; margin-top:6px; display:block}
+  .legend li b{color:var(--white); display:block; font-weight:600}
+
+  /* journeys */
+  .journey{margin-top:26px; border:1px solid var(--line); border-radius:16px; background:var(--navy-800); padding:22px 22px 18px; overflow-x:auto; box-shadow:var(--shadow)}
+  .journey .jh{display:flex; justify-content:space-between; gap:16px; align-items:baseline; margin-bottom:16px}
+  .journey .jh h3{font-size:1.15rem}
+  .journey .jh span{font-size:.85rem; color:var(--muted)}
+  .steps{display:flex; gap:0; min-width:720px}
+  .step{flex:1; position:relative; padding:14px 26px 14px 22px; background:var(--navy-700); clip-path:polygon(0 0, calc(100% - 16px) 0, 100% 50%, calc(100% - 16px) 100%, 0 100%, 16px 50%); margin-right:-10px}
+  .step:first-child{clip-path:polygon(0 0, calc(100% - 16px) 0, 100% 50%, calc(100% - 16px) 100%, 0 100%); border-radius:10px 0 0 10px}
+  .step:last-child{clip-path:polygon(0 0, 100% 0, 100% 100%, 0 100%, 16px 50%); border-radius:0 10px 10px 0; background:linear-gradient(90deg,var(--orange),var(--amber))}
+  .step b{display:block; font-family:"Manrope",sans-serif; font-weight:700; font-size:.95rem; color:var(--white); line-height:1.2}
+  .step small{display:block; font-family:"JetBrains Mono",monospace; font-size:.66rem; letter-spacing:.1em; text-transform:uppercase; color:var(--accent-text); margin-top:4px}
+  .step:last-child small{color:rgba(255,255,255,.85)}
+
+  /* module */
+  .module .tag{font-family:"Source Sans 3",sans-serif; font-style:italic; font-weight:300; font-size:1.35rem; color:var(--accent-text); margin-top:8px}
+  .module .prose{margin-top:18px}
+  .cols{display:grid; grid-template-columns:1fr 1fr; gap:36px; margin-top:32px}
+  @media (max-width:760px){ .cols{grid-template-columns:1fr; gap:24px} }
+  .cols h4{padding-bottom:10px; border-bottom:2px solid var(--orange); margin-bottom:8px; display:flex; align-items:center; gap:10px}
+  .cols h4 .n{font-family:"JetBrains Mono",monospace; font-weight:400; font-size:.7rem; color:var(--muted); letter-spacing:.1em}
+  .cols ul{margin:0; padding:0; list-style:none}
+  .cols ul li{position:relative; padding:7px 0 7px 20px; font-size:.97rem; color:var(--text-2); border-bottom:1px solid var(--line)}
+  .cols ul li::before{content:""; position:absolute; left:2px; top:16px; width:7px; height:7px; border-radius:2px; background:var(--orange)}
+  .cols ul li:last-child{border-bottom:0}
+  .cols ul ul{margin-top:4px}
+  .cols ul ul li{border-bottom:0; padding:2px 0 2px 16px; font-size:.9rem; color:var(--muted)}
+  .cols ul ul li::before{width:4px;height:4px;top:11px;background:var(--muted);border-radius:50%}
+  .links{margin-top:26px; display:flex; flex-wrap:wrap; align-items:center; gap:8px}
+  .links .lbl{font-family:"JetBrains Mono",monospace; font-size:.7rem; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); margin-right:6px}
+  .chip{font-size:.85rem; padding:5px 12px; border:1px solid var(--line-2); background:var(--overlay); color:var(--text); border-radius:999px; text-decoration:none}
+  .chip:hover{border-color:var(--orange); color:var(--white)}
+  .chip .arrow{color:var(--orange); margin-right:5px}
+  .stack{display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-top:24px}
+  @media (max-width:760px){ .stack{grid-template-columns:1fr} }
+  .stack div{border:1px solid var(--line); border-radius:12px; padding:16px 18px; background:var(--navy-800); box-shadow:var(--shadow)}
+  .stack h4{margin-bottom:4px; color:var(--white)}
+  .stack p{font-size:.94rem; color:var(--text-2)}
+
+  /* flow figure */
+  figure.flow{margin:34px 0 0; border:1px solid var(--line); border-radius:16px; background:var(--navy-800); padding:18px 18px 14px; position:relative; box-shadow:var(--shadow)}
+  figure.flow .fh{display:flex; justify-content:space-between; gap:16px; align-items:baseline; margin-bottom:8px; flex-wrap:wrap}
+  figure.flow .fh .eyebrow{font-size:.68rem}
+  figure.flow .fh span.d{font-size:.88rem; color:var(--muted)}
+  figure.flow .canvas{overflow-x:auto; padding-bottom:6px; background:radial-gradient(var(--dot) 1px, transparent 1.4px) 0 0/16px 16px; border-radius:10px}
+  figure.flow svg{display:block; font-family:"Source Sans 3",sans-serif}
+  figure.flow .key{display:flex; gap:18px; flex-wrap:wrap; margin-top:10px; font-family:"JetBrains Mono",monospace; font-size:.64rem; letter-spacing:.1em; text-transform:uppercase; color:var(--muted)}
+  figure.flow .key i{display:inline-block; width:12px; height:12px; border-radius:3px; vertical-align:-2px; margin-right:6px}
+  .n-in{fill:var(--node-in); stroke:var(--node-in-stroke)}
+  .n-proc{fill:var(--node-proc); stroke:var(--node-proc-stroke)}
+  .n-dec{fill:var(--node-dec); stroke:var(--node-dec-stroke)}
+  .n-db{fill:var(--node-db); stroke:var(--node-db-stroke)}
+  .n-out{fill:url(#gOut); stroke:none}
+  .edge{fill:none; stroke:var(--edge); stroke-width:1.5; stroke-dasharray:5 5; animation:dash 1.6s linear infinite}
+  @keyframes dash{to{stroke-dashoffset:-20}}
+  .elabel{font-family:"JetBrains Mono",monospace; font-size:9.5px; fill:var(--accent-text); letter-spacing:.06em; text-transform:uppercase}
+  .elbg{fill:var(--navy-900)}
+  .ntext{fill:var(--ntext); font-size:12.5px; font-weight:500}
+  .n-out + .ntext{fill:var(--on-out); font-weight:600}
+  .ntag{font-family:"JetBrains Mono",monospace; font-size:8.5px; fill:var(--muted); letter-spacing:.1em}
+
+  /* cost + dashboard layers */
+  .kpis{margin-top:22px; display:flex; flex-wrap:wrap; align-items:center; gap:8px; padding:12px 14px; border:1px dashed var(--line-2); border-radius:12px; background:rgba(245,165,36,.05)}
+  .kpis .lbl{font-family:"JetBrains Mono",monospace; font-size:.68rem; letter-spacing:.14em; text-transform:uppercase; color:var(--accent-text); margin-right:4px}
+  .kpis span.k{font-size:.86rem; color:var(--text); padding:3px 10px; border-radius:999px; background:var(--navy-700)}
+  .costnote{margin-top:18px; display:grid; grid-template-columns:auto 1fr; gap:14px; align-items:start; padding:14px 16px; border-radius:12px; background:linear-gradient(90deg,rgba(242,107,29,.14),rgba(242,107,29,.03)); border-left:3px solid var(--orange)}
+  .costnote .ic{width:34px; height:34px; border-radius:9px; background:var(--orange); color:#fff; display:grid; place-items:center; font-family:"JetBrains Mono",monospace; font-size:.72rem; font-weight:500}
+  .costnote b{display:block; color:var(--white); font-family:"Manrope",sans-serif; font-size:.98rem; margin-bottom:2px}
+  .costnote p{font-size:.93rem; color:var(--text-2)}
+  .lenses{display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:16px; margin-top:8px}
+  .lens{border:1px solid var(--line); border-radius:16px; padding:20px; background:var(--navy-800); display:flex; flex-direction:column; gap:8px; box-shadow:var(--shadow); border-top:3px solid var(--orange)}
+  .lens .eyebrow{font-size:.64rem}
+  .lens h3{font-size:1.1rem}
+  .lens p{font-size:.93rem; color:var(--text-2); flex:1}
+  .lens .to{font-size:.8rem; color:var(--muted); border-top:1px solid var(--line); padding-top:8px}
+  .lens .to b{color:var(--accent-text); font-weight:600}
+  .dash{margin-top:28px; border:1px solid var(--line-2); border-radius:20px; background:var(--navy-950); padding:18px; box-shadow:0 30px 80px rgba(0,0,0,.35)}
+  .dash .dt{display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap; padding:4px 6px 16px}
+  .dash .dt .note{font-family:"JetBrains Mono",monospace; font-size:.66rem; letter-spacing:.12em; text-transform:uppercase; color:var(--muted)}
+  .tiles{display:grid; grid-template-columns:repeat(4,1fr); gap:12px}
+  @media (max-width:1100px){ .tiles{grid-template-columns:repeat(2,1fr)} }
+  @media (max-width:560px){ .tiles{grid-template-columns:1fr} }
+  .tile{background:var(--navy-800); border:1px solid var(--line); border-radius:14px; padding:14px 16px 12px; display:flex; flex-direction:column; gap:6px; min-height:158px}
+  .tile small{font-family:"JetBrains Mono",monospace; font-size:.62rem; letter-spacing:.12em; text-transform:uppercase; color:var(--muted)}
+  .tile b{font-family:"Manrope",sans-serif; font-size:1.55rem; font-weight:800; color:var(--white); line-height:1.1; font-variant-numeric:tabular-nums}
+  .tile b i{font-style:normal; font-size:.8rem; font-weight:600; margin-left:8px; color:var(--accent-text)}
+  .tile b i.down{color:var(--down)}
+  .tile svg{width:100%; height:48px; display:block; margin-top:auto; overflow:visible}
+  .tile em{font-style:normal; font-size:.78rem; color:var(--muted)}
+  .srcs td:nth-child(2){color:var(--text)}
+  /* matrix */
+  .tablewrap{overflow-x:auto; margin-top:20px; border:1px solid var(--line); border-radius:14px; background:var(--navy-800); box-shadow:var(--shadow)}
+  table{border-collapse:collapse; width:100%; font-size:.92rem; min-width:760px}
+  th,td{text-align:left; padding:12px 14px; border-bottom:1px solid var(--line); vertical-align:top}
+  th{font-family:"JetBrains Mono",monospace; font-weight:500; font-size:.68rem; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); background:var(--navy-700); position:sticky; top:0}
+  td:first-child{font-weight:600; color:var(--white); white-space:nowrap}
+  tr:last-child td{border-bottom:0}
+  td.c{text-align:center}
+  td .y{display:inline-block; width:18px; height:18px; border-radius:50%; background:var(--orange); color:var(--white); font-size:.7rem; line-height:18px; text-align:center; font-weight:700}
+  td .dom{font-family:"JetBrains Mono",monospace; font-size:.66rem; color:var(--muted); letter-spacing:.08em; display:block; text-transform:uppercase; margin-top:2px}
+
+  /* roadmap */
+  .road{display:grid; grid-template-columns:repeat(5,1fr); gap:14px; margin-top:24px}
+  @media (max-width:980px){ .road{grid-template-columns:repeat(2,1fr)} }
+  @media (max-width:560px){ .road{grid-template-columns:1fr} }
+  .road div{border:1px solid var(--line); border-radius:14px; padding:18px; background:var(--navy-800); position:relative; box-shadow:var(--shadow)}
+  .road div::before{content:attr(data-n); font-family:"JetBrains Mono",monospace; color:var(--orange); font-size:.78rem; letter-spacing:.14em}
+  .road h4{margin:8px 0 6px}
+  .road p{font-size:.92rem; color:var(--text-2)}
+
+  /* closing */
+  .cta{margin-top:8px; border-radius:20px; padding:44px; background:radial-gradient(800px 300px at 20% 0%, rgba(242,107,29,.22), transparent 60%), var(--navy-800); border:1px solid var(--line); display:grid; grid-template-columns:minmax(0,1fr) auto; gap:28px; align-items:center}
+  @media (max-width:820px){ .cta{grid-template-columns:1fr} }
+  .cta p{color:var(--text-2); max-width:40rem; margin-top:10px}
+  footer{padding:32px 0 0; font-size:.84rem; color:var(--muted); display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px 24px; border-top:1px solid var(--line)}
+  footer b{color:var(--text-2); font-weight:600}
+  footer b span{color:var(--orange)}
+
+  @media print{
+    body{background:var(--navy-900)}
+    .rail,.topbar{display:none}
+    .shell{grid-template-columns:1fr; padding:0 24px; max-width:none}
+    section{break-before:page; padding:24pt 0}
+    section.no-break{break-before:auto}
+    figure.flow{break-inside:avoid}
+    .edge{animation:none}
+  }
+
+  /* ================= deck layout ================= */
+  html,body{height:100%; overflow:hidden}
+  .chrome{position:fixed; top:0; left:0; right:0; z-index:30; height:56px; display:flex; align-items:center; justify-content:space-between; padding:0 28px; background:var(--topbar); backdrop-filter:blur(10px); border-bottom:1px solid var(--line)}
+  .chrome .right{display:flex; align-items:center; gap:12px}
+  .chrome .counter{font-family:"JetBrains Mono",monospace; font-size:.74rem; letter-spacing:.14em; color:var(--muted); margin-right:8px; font-variant-numeric:tabular-nums}
+  .ctl{padding:8px 14px; border-radius:999px; border:1px solid var(--line-2); background:var(--overlay); color:var(--white); font-family:"JetBrains Mono",monospace; font-size:.7rem; letter-spacing:.12em; text-transform:uppercase; cursor:pointer}
+  .ctl:hover{border-color:var(--orange)}
+  .ctl:focus-visible,.arrows button:focus-visible{outline:2px solid var(--amber); outline-offset:3px}
+  .progress{position:fixed; top:56px; left:0; right:0; height:3px; z-index:30; background:var(--line)}
+  .progress i{display:block; height:100%; width:0; background:linear-gradient(90deg,var(--orange),var(--amber)); transition:width .25s ease}
+  .deck{position:fixed; inset:0; overflow-y:auto; overflow-x:hidden; scroll-snap-type:y mandatory; scroll-behavior:auto; background:var(--navy-900)}
+  @keyframes rise{from{opacity:0; transform:translateY(14px)} to{opacity:1; transform:none}}
+  .slide.in .head{animation:rise .4s ease both} .slide.in .body{animation:rise .5s ease .08s both}
+  @media (prefers-reduced-motion: reduce){ .slide.in .head,.slide.in .body{animation:none} }
+  .slide{position:relative; height:100vh; scroll-snap-align:start; scroll-snap-stop:always; padding:max(12vh,80px) 6vw 7vh; display:grid; grid-template-rows:auto minmax(0,1fr); gap:2.6vh; overflow:hidden; border-bottom:1px solid var(--line); background:var(--navy-900); color:var(--text)}
+  .slide .head{max-width:70rem}
+  .slide .head .eyebrow{display:block; margin-bottom:10px}
+  .slide .head .eyebrow::before{content:""; display:inline-block; width:26px; height:2px; background:var(--orange); vertical-align:middle; margin-right:10px}
+  .slide .head h2{font-size:clamp(1.6rem,3.3vw,2.7rem)}
+  .slide .head .tag{font-family:"Source Sans 3",sans-serif; font-style:italic; font-weight:400; color:var(--accent-text); font-size:clamp(1rem,1.5vw,1.25rem); margin-top:6px}
+  .slide .body{min-height:0; overflow:auto; padding-right:4px}
+  .slide .num{position:absolute; bottom:2.6vh; right:150px; font-family:"JetBrains Mono",monospace; font-size:.7rem; letter-spacing:.14em; color:var(--muted); font-variant-numeric:tabular-nums}
+  .slide.cover::after,.slide.closing::after,.slide.cover .num,.slide.closing .num{display:none}
+  .slide::after{content:var(--deck-foot,"DataMartBD Limited \00b7 DM Enterprize Suite"); position:absolute; bottom:2.6vh; left:6vw; font-family:"JetBrains Mono",monospace; font-size:.66rem; letter-spacing:.14em; text-transform:uppercase; color:var(--muted)}
+  /* cover + closing */
+  .slide.cover,.slide.closing{display:block; padding:0}
+  .slide.cover canvas{position:absolute; inset:0; width:100%; height:100%; display:block}
+  .slide .cv{position:relative; height:100%; display:flex; flex-direction:column; justify-content:center; padding:max(12vh,80px) 6vw 8vh; max-width:58rem}
+  .slide.cover h1{font-size:clamp(2.6rem,6.2vw,5.4rem); margin-top:3vh}
+  .slide.cover h1 .light{display:block; font-size:.9em}
+  .slide.cover .lede{margin-top:3vh; font-size:clamp(1rem,1.5vw,1.3rem); line-height:1.55; color:var(--text-2); max-width:38rem}
+  .slide.cover .meta{margin-top:5vh; display:grid; grid-template-columns:repeat(4,auto); justify-content:start; gap:0 44px; padding-top:22px; border-top:1px solid var(--line)}
+  .slide.cover .meta strong{display:block; font-family:"Manrope",sans-serif; font-size:clamp(1.4rem,2.2vw,2rem); font-weight:800; color:var(--white); line-height:1.1}
+  .slide.cover .meta span{font-size:.8rem; color:var(--muted); letter-spacing:.04em}
+  .slide.cover .hint{margin-top:5vh; font-size:.8rem; color:var(--muted)} .slide.cover .hint b{color:var(--amber); font-family:"JetBrains Mono",monospace; font-weight:500}
+  .slide.closing h2{font-size:clamp(2.2rem,5vw,4.4rem); margin-top:14px}
+  .slide.closing .lede{margin-top:3vh; font-size:clamp(1rem,1.5vw,1.3rem); color:var(--text-2); max-width:40rem}
+  .slide.closing .foot{margin-top:6vh; font-size:.84rem; color:var(--muted)} .slide.closing .foot b{color:var(--text-2)} .slide.closing .foot b span{color:var(--orange)}
+  /* content fitting */
+  .slide .cards{grid-template-columns:repeat(5,1fr); gap:16px} @media (max-width:1100px){ .slide .cards{grid-template-columns:repeat(2,1fr)} }
+  .slide .card{padding:18px} .slide .card p{font-size:clamp(.82rem,1vw,.95rem)}
+  .slide .hubwrap{height:100%; align-items:center} .slide .hub svg{width:auto; height:min(72vh,720px); max-width:100%}
+  .jgrid{display:grid; gap:10px} .jgrid .journey{margin-top:0; padding:12px 16px 10px} .jgrid .step{padding:10px 22px 10px 18px} .jgrid .step b{font-size:.86rem}
+  .slide .lenses{grid-template-columns:repeat(3,1fr)} .slide .lens p{font-size:clamp(.82rem,1vw,.95rem)}
+  .slide .dash{margin-top:0} .slide .tile{min-height:0}
+  .slide .tablewrap{margin-top:0} .slide table{font-size:clamp(.74rem,.95vw,.9rem)} .slide th,.slide td{padding:7px 10px}
+  .slide .road{grid-template-columns:repeat(5,1fr)} .slide .road p{font-size:clamp(.8rem,1vw,.92rem)}
+  .slide figure.flow{margin:0; height:100%; display:flex; flex-direction:column; min-height:0} .slide figure.flow .fh{display:none} .slide figure.flow .canvas{flex:1 1 auto; min-height:0; overflow:hidden; display:block; padding:0}
+  .slide figure.flow svg{display:block; width:100%; height:100%; max-height:none}
+  .slide.flowslide .body{overflow:hidden; display:flex; flex-direction:column}
+  .mgrid{display:grid; grid-template-columns:1.15fr 1fr 1fr; gap:2.4vw; height:100%; min-height:0}
+  @media (max-width:960px){ .mgrid{grid-template-columns:1fr; height:auto} }
+  .mgrid .prose{font-size:clamp(.9rem,1.15vw,1.05rem); color:var(--text-2)}
+  .mgrid .costnote{margin-top:16px; padding:12px 14px} .mgrid .costnote p{font-size:.88rem}
+  .mgrid .kpis{margin-top:16px} .mgrid .kpis span.k{font-size:.8rem}
+  .mgrid h4{padding-bottom:8px; border-bottom:2px solid var(--orange); margin-bottom:6px}
+  .mgrid ul{margin:0; padding:0; list-style:none} .mgrid ul li{position:relative; padding:6px 0 6px 16px; font-size:clamp(.82rem,1.02vw,.96rem); color:var(--text-2); border-bottom:1px solid var(--line)}
+  .mgrid ul li::before{content:""; position:absolute; left:1px; top:13px; width:6px; height:6px; border-radius:2px; background:var(--orange)}
+  .mgrid ul li:last-child{border-bottom:0}
+  .mgrid .links{margin-top:16px} .mgrid .chip{font-size:.76rem; padding:3px 10px}
+  .mgrid .colWide{grid-column:2 / -1} .mgrid .colWide .stack{margin-top:0; grid-template-columns:1fr 1fr} .mgrid .colWide .stack p{font-size:.86rem}
+  /* arrows + overview */
+  .arrows{position:fixed; right:28px; bottom:22px; z-index:30; display:flex; gap:8px}
+  .arrows button{width:42px; height:42px; border-radius:50%; border:1px solid var(--line-2); background:var(--navy-800); color:var(--white); font-size:1.1rem; cursor:pointer; box-shadow:var(--shadow)}
+  .arrows button:hover{border-color:var(--orange); color:var(--orange)}
+  .overview{position:fixed; inset:0; z-index:40; background:rgba(7,11,31,.92); backdrop-filter:blur(8px); overflow:auto; padding:80px 6vw 40px}
+  .overview ol{list-style:none; margin:0 auto; padding:0; max-width:1300px; display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:10px}
+  .overview a{display:flex; gap:12px; align-items:baseline; padding:12px 14px; border:1px solid rgba(255,255,255,.18); border-radius:10px; color:#E8ECF8; text-decoration:none; font-size:.92rem; background:rgba(255,255,255,.04)}
+  .overview a span{font-family:"JetBrains Mono",monospace; color:#F5A524; font-size:.72rem}
+  .overview a:hover,.overview a.current{border-color:#F26B1D; background:rgba(242,107,29,.12)}
+  .overview .close{position:fixed; top:14px; right:28px; z-index:41}
+  .slide.cover,.slide.closing,.chrome{
+    --navy-950:#070B1F; --navy-900:#0B1230; --navy-800:#111A3F; --navy-700:#1A2551; --navy-600:#25336A;
+    --line:rgba(255,255,255,.14); --line-2:rgba(255,255,255,.26);
+    --white:#FFFFFF; --text:#E8ECF8; --text-2:#C3CBE6; --muted:#8E99BF;
+    --accent-text:#F5A524; --overlay:rgba(255,255,255,.05); --topbar:rgba(11,18,48,.92); --globe-grid:rgba(255,255,255,0.10); --shadow:0 0 0 rgba(0,0,0,0);
+    color-scheme:dark;
+  }
+  @media print{
+    @page{size:landscape; margin:10mm}
+    html,body{overflow:visible; height:auto}
+    .chrome,.progress,.arrows,.overview{display:none !important}
+    .deck{position:static; overflow:visible; height:auto}
+    .slide{height:auto; min-height:0; break-after:page; page-break-after:always; padding:14mm 12mm; overflow:visible}
+    .slide .body{overflow:visible}
+    .slide figure.flow svg{max-height:none}
+  }
+  /* The slide's implicit column would otherwise size to a screenshot's
+     intrinsic width and push the content past the slide. */
+  .slide{grid-template-columns:minmax(0,1fr)}
+  .slide .body,.two,.shots,.steps,.replist,.cols,.prose{min-width:0}
+
+  /* ================= screenshot slides ================= */
+  .shots{display:flex; gap:clamp(18px,3vw,46px); align-items:flex-start; justify-content:center; height:100%; flex-wrap:wrap}
+  .shot{display:flex; flex-direction:column; align-items:center; gap:10px; min-width:0; max-height:100%}
+  .shot img{display:block; max-width:100%; object-fit:contain; border-radius:10px; border:1px solid var(--line-2); background:#FFFFFF; box-shadow:var(--shadow)}
+  .shot .cap{font-family:"JetBrains Mono",monospace; font-size:.66rem; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); text-align:center; max-width:34rem}
+  .shot .cap b{display:block; font-family:"Manrope",sans-serif; font-weight:700; font-size:.92rem; letter-spacing:-0.01em; text-transform:none; color:var(--white); margin-bottom:3px}
+  /* --bh is the slide body's real height, set by script on every resize */
+  .shots.wide{align-items:center}
+  .shots.wide .shot img{max-height:calc(var(--bh,58vh) - 92px); width:auto}
+  .shots.pair{flex-wrap:nowrap; align-items:center}
+  .shots.pair .shot{flex:1 1 0}
+  .shots.pair .shot img{max-height:calc(var(--bh,58vh) - 92px); width:auto}
+  .shots.one .shot img{max-height:calc(var(--bh,58vh) - 6px)}
+  @media (max-width:900px){ .shots{gap:16px} .shots.pair{flex-wrap:wrap} }
+
+  /* numbered cards */
+  .steps{display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:16px; align-content:start}
+  .steps div{position:relative; padding:20px 18px 18px; border:1px solid var(--line); border-radius:14px; background:var(--navy-800)}
+  .steps span{display:block; font-family:"JetBrains Mono",monospace; font-size:.7rem; letter-spacing:.2em; color:var(--accent-text); margin-bottom:9px}
+  .steps h4{font-size:1.02rem; line-height:1.25}
+  .steps p{margin-top:7px; font-size:.9rem; color:var(--text-2); line-height:1.45}
+  .steps.tight{grid-template-columns:repeat(6,minmax(0,1fr)); gap:12px}
+  .steps.tight div{padding:14px 13px 13px}
+  .steps.tight h4{font-size:.94rem}
+  .steps.tight p{font-size:.8rem; margin-top:5px}
+  .steps.tight p.wc{font-family:"JetBrains Mono",monospace; font-size:.62rem; letter-spacing:.08em; text-transform:uppercase; color:var(--muted)}
+  @media (max-width:1100px){ .steps.tight{grid-template-columns:repeat(4,minmax(0,1fr))} }
+  @media (max-width:700px){ .steps.tight{grid-template-columns:repeat(2,minmax(0,1fr))} }
+
+  /* index of short lists */
+  .replist{display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:26px; align-content:start}
+  .replist h4{font-size:.98rem; margin-bottom:12px; padding-bottom:9px; border-bottom:1px solid var(--line)}
+  .replist ul{list-style:none; margin:0; padding:0; display:grid; gap:7px}
+  .replist li{font-size:.93rem; color:var(--text-2); padding-left:16px; position:relative}
+  .replist li::before{content:""; position:absolute; left:0; top:.62em; width:6px; height:1.5px; background:var(--orange)}
+
+  /* ================= two-up: words beside a screen ================= */
+  .two{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,54%); gap:clamp(20px,3.4vw,54px); align-items:center; height:100%}
+  .two > *{min-width:0}
+  .two.tall{grid-template-columns:minmax(0,1fr) minmax(0,40%)}
+  .two .prose{max-width:38rem; margin-top:0}
+  .two .cols{margin-top:0; grid-template-columns:1fr; gap:22px}
+  .two .shots{height:auto; max-width:100%; flex-wrap:nowrap}
+  .two .shots .shot img{max-height:calc(var(--bh,52vh) - 70px); width:auto}
+  .two.tall .shots .shot img{max-height:calc(var(--bh,52vh) - 80px)}
+  .stacked .shots.wide .shot img{max-height:calc(var(--bh,58vh) - 300px)}
+  @media (max-width:980px){ .two,.two.tall{grid-template-columns:1fr; align-content:start; gap:20px} }
+
+  /* bullets inside a prose column */
+  .prose ul{margin:14px 0 0; padding:0; list-style:none}
+  .prose ul li{position:relative; padding:7px 0 7px 20px; font-size:.97rem; color:var(--text-2); border-bottom:1px solid var(--line)}
+  .prose ul li:last-child{border-bottom:0}
+  .prose ul li::before{content:""; position:absolute; left:2px; top:16px; width:7px; height:7px; border-radius:2px; background:var(--orange)}
+  .prose p+ul{margin-top:10px}
+  .two .steps{margin-top:18px; grid-template-columns:1fr}
+
+  /* field / value table beside a screen */
+  table.kv{width:100%; border-collapse:collapse; margin-top:14px; font-size:.92rem}
+  table.kv td{padding:7px 10px 7px 0; border-bottom:1px solid var(--line); vertical-align:top; color:var(--text-2)}
+  table.kv td:first-child{font-family:"JetBrains Mono",monospace; font-size:.68rem; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); white-space:nowrap; padding-top:10px}
+  table.kv tr:last-child td{border-bottom:0}
+  .check{display:flex; flex-wrap:wrap; gap:8px; margin-top:14px}
+  .check span{font-family:"JetBrains Mono",monospace; font-size:.72rem; letter-spacing:.06em; padding:6px 10px; border-radius:999px; border:1px solid var(--line-2); color:var(--white)}
+  .check span.ok{border-color:#2E9E6A; color:#1F8A57; background:rgba(46,158,106,.10)}
+  .check span.bad{border-color:#D64545; color:#C53030; background:rgba(214,69,69,.10)}
+  :root[data-theme="dark"] .check span.ok{color:#6FD3A0}
+  :root[data-theme="dark"] .check span.bad{color:#FF8A8A}
+
+  /* the order status line */
+  .status{display:flex; flex-wrap:wrap; align-items:center; gap:10px; margin-top:6px}
+  .status b{font-family:"Manrope",sans-serif; font-size:.95rem; padding:8px 14px; border-radius:10px; border:1px solid var(--line-2); background:var(--navy-800); color:var(--white)}
+  .status i{font-style:normal; font-family:"JetBrains Mono",monospace; font-size:.66rem; letter-spacing:.1em; text-transform:uppercase; color:var(--accent-text)}
+
+  .stacked{display:grid; gap:clamp(16px,3vh,30px); align-content:start}
+  .stacked h4.blocktitle{font-size:1rem; margin-bottom:10px}
+  .shotnote{margin-top:12px; color:var(--muted); font-size:.88rem}
+
+</style>
+
+<div class="chrome">
+  <a class="wordmark" href="#top">Jute Alliance <span>Limited</span></a>
+  <div class="right">
+    <span class="counter" id="counter">1 / 1</span>
+    <button class="ctl" id="gridBtn" type="button" title="Slide grid (G)">Slides</button>
+    <button class="ctl" id="fsBtn" type="button" title="Full screen (F)">Full screen</button>
+    <button class="theme" id="themeBtn" type="button" aria-label="Switch to dark mode"><i aria-hidden="true"></i><span>Dark mode</span></button>
+  </div>
+</div>
+<div class="progress"><i id="bar"></i></div>
+
+<div class="deck" id="deck">
+<section class="slide cover" id="top" data-title="Cover"><div class="body"><canvas id="globe" aria-hidden="true"></canvas>
+<div class="cv">
+  <span class="pill">JAL ERP &middot; Production</span>
+  <h1>From raw jute <span class="grad">to the container,</span><span class="light">on one production record.</span></h1>
+  <p class="lede">How Jute Alliance Limited plans and runs production in the ERP &mdash; BOM, routing, MRP, stage orders and shift entries &mdash; walked through three real jobs: an export sacking order, an export hessian order and yarn cops for stock.</p>
+  <div class="meta">
+    <div><strong>12</strong><span>Production stages</span></div>
+    <div><strong>5</strong><span>Steps for every job</span></div>
+    <div><strong>3</strong><span>Sample use cases</span></div>
+    <div><strong>17</strong><span>Export products</span></div>
+  </div>
+  <p class="hint">Jute Alliance Limited &middot; a joint venture of Samuda Chemical Complex Ltd. &amp; Bay Group &middot; Use &rarr; and &larr; keys, or scroll. Press <b>G</b> for the slide grid, <b>F</b> for full screen.</p>
+</div></div><span class="num">01 / 33</span></section>
+<section class="slide" id="stages" data-title="Twelve stages"><div class="head"><span class="eyebrow">The production floor</span><h2>Twelve stages, <span class="light">from the batching house to the FG warehouse.</span></h2></div><div class="body"><div class="steps tight"><div><span>01</span><h4>Raw Material Preparation</h4><p>Selection, batching and softening</p><p class="wc">Batching house &middot; kg</p></div><div><span>02</span><h4>Carding</h4><p>Fibre opening and carding</p><p class="wc">Carding section &middot; kg</p></div><div><span>03</span><h4>Drawing</h4><p>Fibre alignment and drawing</p><p class="wc">Drawing section &middot; kg</p></div><div><span>04</span><h4>Spinning</h4><p>Jute yarn production</p><p class="wc">Spinning section &middot; kg</p></div><div><span>05</span><h4>Winding</h4><p>Beams, rolls, spools and cops</p><p class="wc">Winding &amp; beaming &middot; kg</p></div><div><span>06</span><h4>Weaving</h4><p>Sacking, hessian and geo-mesh cloth</p><p class="wc">Loom shed &middot; kg / yd</p></div><div><span>07</span><h4>Lamination</h4><p>Poly film lamination of hessian</p><p class="wc">Lamination unit &middot; kg</p></div><div><span>08</span><h4>Cutting</h4><p>Fabric cut to bag size</p><p class="wc">Cutting section &middot; kg &rarr; pcs</p></div><div><span>09</span><h4>Sewing</h4><p>Bag stitching and finishing</p><p class="wc">Sewing section &middot; pcs</p></div><div><span>10</span><h4>Inspection</h4><p>Quality inspection and rejection</p><p class="wc">Finishing &amp; QC &middot; pcs</p></div><div><span>11</span><h4>Packing</h4><p>Bale and roll preparation</p><p class="wc">Baling section &middot; &rarr; bales</p></div><div><span>12</span><h4>Finished Goods</h4><p>Transfer to the warehouse</p><p class="wc">FG warehouse &middot; bales</p></div></div><p class="shotnote">Every product follows a route through some of these stages &mdash; sacking bags use 11, hessian cloth 9, yarn cops 7.</p></div><span class="num">02 / 33</span></section>
+<section class="slide" id="five-steps" data-title="Five steps"><div class="head"><span class="eyebrow">How every job runs</span><h2>The same five steps <span class="light">for every product.</span></h2></div><div class="body"><div class="steps "><div><span>01</span><h4>Check BOM &amp; routing</h4><p>What goes into one bale, level by level, and the operations that make it.</p></div><div><span>02</span><h4>Run MRP</h4><p>Explode the contract quantity back to raw jute, net off stock and schedule backwards from ship-by.</p></div><div><span>03</span><h4>Release the stage order</h4><p>One planned order per stage. Release it when material and the section are ready.</p></div><div><span>04</span><h4>Post a shift entry</h4><p>Input, good output, waste and downtime, every shift, checked live before it posts.</p></div><div><span>05</span><h4>Complete &amp; close</h4><p>Complete when the run is done, close to freeze it with final yield and wastage.</p></div></div><p class="shotnote">Watched throughout on the Daily board, the Production process view and the Executive dashboard.</p></div><span class="num">03 / 33</span></section>
+<section class="slide flowslide" id="flow-plan" data-title="Flow · Contract to orders"><div class="head"><span class="eyebrow">Planning flow &middot; Flow 01</span><h2>From the contract line <span class="light">to stage orders and purchase lines.</span></h2></div><div class="body"><figure class="flow" data-flow="jalplan"><div class="fh"><span class="eyebrow">Flow 01 &middot; Contract to orders</span><span class="d">MRP reads the BOM and routing, nets each stage against stock on hand and creates an order only for what is left to make.</span></div><div class="canvas"></div></figure></div><span class="num">04 / 33</span></section>
+<section class="slide flowslide" id="flow-floor" data-title="Flow · Release to close"><div class="head"><span class="eyebrow">Shop-floor flow &middot; Flow 02</span><h2>From a released order <span class="light">to a closed one.</span></h2></div><div class="body"><figure class="flow" data-flow="jalfloor"><div class="fh"><span class="eyebrow">Flow 02 &middot; Release to close</span><span class="d">Every shift entry is checked before it posts. The first posted entry starts the order; drafts must be cleared before it can complete.</span></div><div class="canvas"></div></figure></div><span class="num">05 / 33</span></section>
+<section class="slide" id="use-cases" data-title="Three use cases"><div class="head"><span class="eyebrow">Sample use cases</span><h2>Three real jobs, <span class="light">start to finish.</span></h2></div><div class="body"><div class="steps "><div><span>01</span><h4>Standard B' Twill sacking bags</h4><p>19,500 bags = 65 bales = one 20&prime; FCL for Egypt. Export, make-to-order, 11 stages. MRP with stock netting, a rejected entry, batching and sewing shifts.</p></div><div><span>02</span><h4>Hessian cloth 40&Prime; 10 oz</h4><p>64,000 yd = 32 bales = one 20&prime; FCL for Belgium. Export, make-to-order, 9 stages. Output in yards, input in kg, and a loom breakdown.</p></div><div><span>03</span><h4>28/1 jute yarn cops</h4><p>50,000 cops = 100 bales for stock. Make-to-stock, 7 stages, output in pieces. Complete and close an order.</p></div></div></div><span class="num">06 / 33</span></section>
+<section class="slide" id="sign-in" data-title="Sign in"><div class="head"><span class="eyebrow">Getting started</span><h2>Sign in <span class="light">with your JAL ERP account.</span></h2></div><div class="body"><div class="two "><div class="prose"><p>Enter your username and password and click <b>Sign in</b>. What you can do depends on your role.</p><ul><li><b>Production Manager / Factory Head</b> &mdash; BOMs, routings, MRP, creating, releasing and closing orders, shift entries</li><li><b>Line Supervisor</b> &mdash; shift entries only; no dashboard, no order release</li><li><b>CEO / Board</b> &mdash; viewing only</li></ul></div><div class="shots one"><div class="shot"><img src="assets/jal-erp/02-login-filled.png" alt="Sign in" loading="lazy" style="max-width:min(100%,1440px)"><span class="cap"><b>Sign in</b>JAL ERP &middot; login</span></div></div></div></div><span class="num">07 / 33</span></section>
+<section class="slide" id="home" data-title="Executive dashboard"><div class="head"><span class="eyebrow">Getting started</span><h2>The home screen <span class="light">for the Production Manager.</span></h2></div><div class="body"><div class="shots wide"><div class="shot"><img src="assets/jal-erp/03-dashboard.png" alt="Executive dashboard" loading="lazy" style="max-width:min(100%,1440px)"><span class="cap"><b>Executive dashboard</b>Sidebar: Manufacturing (process, orders, shift entry, daily board) and Engineering &amp; planning (Items &amp; BOM, Routings, MRP)</span></div></div></div><span class="num">08 / 33</span></section>
+<section class="slide" id="uc1-bom" data-title="UC1 · BOM"><div class="head"><span class="eyebrow">Use case 1 &middot; B' Twill sacking bags &middot; Step 1</span><h2>Check the BOM. <span class="light">Everything that goes into one bale.</span></h2></div><div class="body"><div class="two "><div class="prose"><p>Contract <b>SC/JAL/2627/0023</b>, CUST-EG-001 (Egypt): <b>19,500 Standard B&prime; Twill bags</b>, 44&Prime; &times; 26.5&Prime;, 1,020 g, 300 bags per bale, ship by 27 Nov 2026.</p><ul><li>Pack of 300 pcs weighs 306 kg</li><li>362 kg raw jute per bale &rarr; 1,206 g per bag &rarr; overall yield 84.6%</li><li>9 BOM levels, from the bale down to raw jute Tossa B + White C</li><li>Wrong quantity or waste %? <b>Edit BOM</b> on the line and <b>Save BOM</b></li></ul></div><div class="shots one"><div class="shot"><img src="assets/jal-erp/10-bom-explorer.png" alt="BOM explorer" loading="lazy" style="max-width:min(100%,1440px)"><span class="cap"><b>BOM explorer</b>Engineering &amp; planning &rarr; Items &amp; BOM</span></div></div></div></div><span class="num">09 / 33</span></section>
+<section class="slide" id="uc1-routing" data-title="UC1 · Routing"><div class="head"><span class="eyebrow">Use case 1 &middot; Step 2</span><h2>Check the routing. <span class="light">Twelve operations, in order.</span></h2></div><div class="body"><div class="two "><div class="prose"><p>The routing lists each operation, its work centre, the item it produces, planning days and QC points.</p><ul><li><b>Spinning</b> on sacking spinning frames (coarse counts)</li><li><b>Winding</b> on beaming &amp; weft cop winding</li><li><b>Weaving</b> on sacking looms</li><li>Change anything, then <b>Save routing</b></li></ul></div><div class="shots one"><div class="shot"><img src="assets/jal-erp/11-routing-btwill.png" alt="Routing" loading="lazy" style="max-width:min(100%,1440px)"><span class="cap"><b>Routing</b>Engineering &amp; planning &rarr; Routings</span></div></div></div></div><span class="num">10 / 33</span></section>
+<section class="slide" id="uc1-mrp-form" data-title="UC1 · Run MRP"><div class="head"><span class="eyebrow">Use case 1 &middot; Step 3</span><h2>Run MRP <span class="light">for the contract line.</span></h2></div><div class="body"><div class="stacked"><table class="kv"><tr><td>Product</td><td>JAL-SB-001 &mdash; Standard B' Twill Sacking Bag</td></tr><tr><td>Quantity</td><td>19,500 pcs &middot; 300 per bale &middot; 19,500 per 20&prime; FCL</td></tr><tr><td>Ship by</td><td>27 Nov 2026</td></tr><tr><td>Sales contract</td><td>SC/JAL/2627/0023</td></tr><tr><td>Customer</td><td>CUST-EG-001 (Egypt)</td></tr></table><div class="shots wide"><div class="shot"><img src="assets/jal-erp/12-mrp-btwill-form.png" alt="MRP explosion" loading="lazy" style="max-width:min(100%,1440px)"><span class="cap"><b>MRP explosion</b>Engineering &amp; planning &rarr; MRP explosion &middot; then Run MRP</span></div></div></div></div><span class="num">11 / 33</span></section>
+<section class="slide" id="uc1-mrp" data-title="UC1 · MRP result"><div class="head"><span class="eyebrow">Use case 1 &middot; Step 3</span><h2>Read it bottom up, <span class="light">from the container back to raw jute.</span></h2></div><div class="body"><div class="two tall"><div class="prose"><p><b>65 bales &middot; 12 stage orders &middot; 6.4 t raw jute &middot; start by 09 Nov.</b></p><ul><li>Finished goods: 65 bales needed, <b>12 in stock</b> &rarr; 53 to make</li><li>Inspection: 15,900 bags needed, <b>4,200 loose in stock</b> &rarr; 11,700 to pass</li><li>Sewing 11,817 &rarr; Cutting 11,877 &rarr; Weaving 10,796 kg (1,500 kg already woven) &rarr; &hellip; &rarr; Batching 6,175 kg</li><li><b>Gross</b> = what the next stage needs &middot; <b>From stock</b> = on hand &middot; <b>To produce</b> = the order</li><li>Purchase lines: 3,816 kg Tossa B, 2,544 kg White C, oil, thread, strapping, labels</li></ul></div><div class="shots one"><div class="shot"><img src="assets/jal-erp/13-mrp-btwill-result.png" alt="JAL ERP screen" loading="lazy" style="max-width:min(100%,1428px)"></div></div></div></div><span class="num">12 / 33</span></section>
+<section class="slide" id="uc1-planned" data-title="UC1 · Planned orders"><div class="head"><span class="eyebrow">Use case 1 &middot; Step 4</span><h2>Twelve planned orders, <span class="light">one per stage, all on the contract.</span></h2></div><div class="body"><div class="shots wide"><div class="shot"><img src="assets/jal-erp/14-planned-orders-btwill.png" alt="Production orders" loading="lazy" style="max-width:min(100%,1425px)"><span class="cap"><b>Production orders</b>Status = Planned &middot; searched by SC/JAL/2627/0023 &middot; remark &ldquo;MRP: item at work centre&rdquo;</span></div></div></div><span class="num">13 / 33</span></section>
+<section class="slide" id="uc1-release" data-title="UC1 · Release"><div class="head"><span class="eyebrow">Use case 1 &middot; Step 5</span><h2>Release the first stage <span class="light">when jute and the batching house are ready.</span></h2></div><div class="body"><div class="shots pair"><div class="shot"><img src="assets/jal-erp/15-order-planned.png" alt="Planned" loading="lazy" style="max-width:min(100%,1440px)"><span class="cap"><b>Planned</b>Route, specification and packing plan</span></div><div class="shot"><img src="assets/jal-erp/16-order-released.png" alt="Released" loading="lazy" style="max-width:min(100%,1440px)"><span class="cap"><b>Released</b>&ldquo;Add shift entry&rdquo; appears</span></div></div></div><span class="num">14 / 33</span></section>
+<section class="slide" id="uc1-refused" data-title="UC1 · Entry refused"><div class="head"><span class="eyebrow">Use case 1 &middot; Step 6</span><h2>A wrong entry <span class="light">is stopped before it posts.</span></h2></div><div class="body"><div class="two "><div class="prose"><p>The supervisor typed a good output of <b>2,240 kg</b> from <b>2,100 kg</b> of input.</p><div class="check"><span class="bad">Yield 106.7%</span><span class="bad">Output + waste &gt; input + 2%</span></div><p style="margin-top:14px">The live check turns red and <b>Post entry</b> is refused. Shift C (22:00&ndash;06:00) belongs to the date it starts.</p></div><div class="shots one"><div class="shot"><img src="assets/jal-erp/17-shift-entry-error.png" alt="Shift entry" loading="lazy" style="max-width:min(100%,1425px)"><span class="cap"><b>Shift entry</b>Live check &middot; refused</span></div></div></div></div><span class="num">15 / 33</span></section>
+<section class="slide" id="uc1-batching" data-title="UC1 · Batching shift"><div class="head"><span class="eyebrow">Use case 1 &middot; Step 6</span><h2>The corrected <span class="light">batching shift.</span></h2></div><div class="body"><div class="two "><div class="prose"><table class="kv"><tr><td>Input</td><td>2,100 kg raw jute issued</td></tr><tr><td>Good output</td><td>2,040 kg batched jute</td></tr><tr><td>Waste</td><td>35 kg root cuttings &middot; 15 kg dust &amp; sweepings</td></tr><tr><td>Downtime</td><td>20 min &mdash; changeover</td></tr><tr><td>Remarks</td><td>Recipe change from hessian mix to sacking mix at 10:30</td></tr></table><div class="check"><span class="ok">Yield 97.1%</span><span class="ok">Wastage 2.38%</span><span class="ok">Unaccounted 0.48%</span></div></div><div class="shots one"><div class="shot"><img src="assets/jal-erp/18-shift-entry-batching.png" alt="Shift entry" loading="lazy" style="max-width:min(100%,1425px)"><span class="cap"><b>Shift entry</b>Live check &middot; all green &rarr; Post entry</span></div></div></div></div><span class="num">16 / 33</span></section>
+<section class="slide" id="uc1-progress" data-title="UC1 · In progress"><div class="head"><span class="eyebrow">Use case 1 &middot; Step 7</span><h2>The order moves to In progress <span class="light">on the first posted entry.</span></h2></div><div class="body"><div class="shots wide"><div class="shot"><img src="assets/jal-erp/19-order-in-progress.png" alt="Order in progress" loading="lazy" style="max-width:min(100%,1425px)"><span class="cap"><b>Order in progress</b>Produced, completion %, yield, wastage and availability come from the posted entries</span></div></div></div><span class="num">17 / 33</span></section>
+<section class="slide" id="uc1-sewing" data-title="UC1 · Sewing shift"><div class="head"><span class="eyebrow">Use case 1 &middot; Step 8</span><h2>Later stages work the same. <span class="light">Sewing counts pieces.</span></h2></div><div class="body"><div class="two "><div class="prose"><table class="kv"><tr><td>Input</td><td>3,950 cut pieces</td></tr><tr><td>Good output</td><td>3,905 bags</td></tr><tr><td>Rejected</td><td>30 pcs &mdash; rework or scrap</td></tr><tr><td>Thread waste</td><td>6 kg</td></tr><tr><td>Downtime</td><td>15 min &mdash; no material</td></tr></table><p style="margin-top:12px">Pieces are converted to kg at the bag weight, <b>1.020 kg</b>.</p><div class="check"><span class="ok">Yield 98.9%</span><span class="ok">Rejects 0.76%</span><span class="ok">Wastage 0.15%</span><span class="ok">Unaccounted 0.23%</span></div></div><div class="shots one"><div class="shot"><img src="assets/jal-erp/20-shift-entry-sewing.png" alt="Shift entry &middot; sewing" loading="lazy" style="max-width:min(100%,1425px)"><span class="cap"><b>Shift entry &middot; sewing</b>Count stage with rejects</span></div></div></div></div><span class="num">18 / 33</span></section>
+<section class="slide" id="uc2-mrp" data-title="UC2 · MRP"><div class="head"><span class="eyebrow">Use case 2 &middot; Hessian cloth 40&Prime; &middot; Step 1</span><h2>Hessian cloth: <span class="light">no cutting, no sewing.</span></h2></div><div class="body"><div class="two tall"><div class="prose"><p>Contract <b>SC/JAL/2627/0024</b>, CUST-BE-002 (Belgium): <b>64,000 yd</b> Hessian Cloth 40&Prime;, 10 oz, 11 &times; 12, 2,000 yd per bale, 32 bales per 20&prime; FCL.</p><ul><li><b>10 stage orders</b> &mdash; cloth goes from the loom to inspection and straight to baling</li><li>Hessian spinning frames (fine counts) and hessian looms</li><li>Weaving and inspection planned in <b>yards</b>; upstream stages in kg</li><li>Raw jute <b>20.3 t</b> from the hessian mix: 14,200 kg White B + 6,086 kg Tossa B</li></ul></div><div class="shots one"><div class="shot"><img src="assets/jal-erp/30-mrp-hessian-result.png" alt="JAL ERP screen" loading="lazy" style="max-width:min(100%,1428px)"></div></div></div></div><span class="num">19 / 33</span></section>
+<section class="slide" id="uc2-order" data-title="UC2 · Weaving order"><div class="head"><span class="eyebrow">Use case 2 &middot; Step 2</span><h2>The weaving order, <span class="light">planned in yards.</span></h2></div><div class="body"><div class="shots wide"><div class="shot"><img src="assets/jal-erp/31-order-weaving-hessian.png" alt="Weaving order &middot; 63,731 yd" loading="lazy" style="max-width:min(100%,1425px)"><span class="cap"><b>Weaving order &middot; 63,731 yd</b>Route 1 &rarr; 6 &rarr; 10 &rarr; 11 &rarr; 12 &middot; 32 bales of 2,000 yd &middot; amber note flags an assumption</span></div></div></div><span class="num">20 / 33</span></section>
+<section class="slide" id="uc2-shift" data-title="UC2 · Loom shift"><div class="head"><span class="eyebrow">Use case 2 &middot; Step 3</span><h2>A loom shift <span class="light">with a breakdown.</span></h2></div><div class="body"><div class="two "><div class="prose"><table class="kv"><tr><td>Input</td><td>4,900 kg prepared yarn</td></tr><tr><td>Good output</td><td><b>15,200 yd</b> cloth</td></tr><tr><td>Waste</td><td>62 kg thread &middot; 25 kg selvedge</td></tr><tr><td>Downtime</td><td>35 min &mdash; breakdown</td></tr><tr><td>Remarks</td><td>Loom LM-07 warp beam bearing replaced</td></tr></table><p style="margin-top:12px">Yards to kg at <b>315 g per yard</b> (10 oz &times; 40&Prime;) &rarr; 4,788 kg.</p><div class="check"><span class="ok">Yield 97.7%</span><span class="ok">Wastage 1.78%</span><span class="ok">Unaccounted 0.51%</span></div></div><div class="shots one"><div class="shot"><img src="assets/jal-erp/32-shift-entry-weaving-yards.png" alt="Shift entry &middot; weaving" loading="lazy" style="max-width:min(100%,1425px)"><span class="cap"><b>Shift entry &middot; weaving</b>Output in yards, input in kg</span></div></div></div></div><span class="num">21 / 33</span></section>
+<section class="slide" id="uc2-progress" data-title="UC2 · Availability"><div class="head"><span class="eyebrow">Use case 2 &middot; Step 4</span><h2>Breakdown minutes <span class="light">cut availability.</span></h2></div><div class="body"><div class="shots wide"><div class="shot"><img src="assets/jal-erp/33-order-weaving-in-progress.png" alt="Weaving order in progress" loading="lazy" style="max-width:min(100%,1425px)"><span class="cap"><b>Weaving order in progress</b>The 35 min also appear on the Daily board and in the dashboard&rsquo;s Downtime by reason chart</span></div></div></div><span class="num">22 / 33</span></section>
+<section class="slide" id="uc3-routes" data-title="UC3 · Product routes"><div class="head"><span class="eyebrow">Use case 3 &middot; 28/1 yarn cops &middot; Step 1</span><h2>Which stages <span class="light">does each product use?</span></h2></div><div class="body"><div class="two "><div class="prose"><p>No customer order: the mill wants <b>50,000 cops</b> of 28/1 jute yarn (&asymp;215 g each, 500 per bale) in stock.</p><ul><li><b>Production process &rarr; Product routes</b>: one row per route family</li><li>A filled square means the product passes that stage</li><li>Yarn cops: stages 1&ndash;5, then Packing and Finished Goods &mdash; no weaving, cutting or sewing</li></ul></div><div class="shots one"><div class="shot"><img src="assets/jal-erp/40-product-routes.png" alt="Product routes" loading="lazy" style="max-width:min(100%,1440px)"><span class="cap"><b>Product routes</b>Manufacturing &rarr; Production process</span></div></div></div></div><span class="num">23 / 33</span></section>
+<section class="slide" id="uc3-mrp" data-title="UC3 · MRP for stock"><div class="head"><span class="eyebrow">Use case 3 &middot; Step 2</span><h2>MRP without a contract <span class="light">is make-to-stock.</span></h2></div><div class="body"><div class="two tall"><div class="prose"><p>Product <b>JAL-COP-001</b>, quantity <b>50,000</b> pcs, sales contract left blank.</p><ul><li><b>7 stage orders</b>; winding on precision cop winders produces 50,000 pcs</li><li>Raw jute <b>9.4 t</b></li><li>Paper cop tubes: 50,000 needed, 12,000 in stock &rarr; <b>38,000 to buy</b>, shown in amber</li><li>In the full ERP a purchase line becomes a purchase requisition</li></ul></div><div class="shots one"><div class="shot"><img src="assets/jal-erp/41-mrp-cops-result.png" alt="JAL ERP screen" loading="lazy" style="max-width:min(100%,1425px)"></div></div></div></div><span class="num">24 / 33</span></section>
+<section class="slide" id="uc3-shift" data-title="UC3 · Winding shift"><div class="head"><span class="eyebrow">Use case 3 &middot; Step 3</span><h2>Winding counts <span class="light">cops, not kilograms.</span></h2></div><div class="body"><div class="two "><div class="prose"><table class="kv"><tr><td>Input</td><td>2,200 kg yarn</td></tr><tr><td>Good output</td><td><b>10,100 cops</b></td></tr><tr><td>Thread waste</td><td>14 kg</td></tr></table><p style="margin-top:12px">At <b>215 g per cop</b> &rarr; 2,172 kg. The amber note reminds that 500 cops per bale is an assumption.</p><div class="check"><span class="ok">Yield 98.7%</span><span class="ok">Wastage 0.64%</span></div></div><div class="shots one"><div class="shot"><img src="assets/jal-erp/42-shift-entry-cops.png" alt="Shift entry &middot; winding" loading="lazy" style="max-width:min(100%,1425px)"><span class="cap"><b>Shift entry &middot; winding</b>Output in pieces</span></div></div></div></div><span class="num">25 / 33</span></section>
+<section class="slide" id="uc3-close" data-title="UC3 · Complete & close"><div class="head"><span class="eyebrow">Use case 3 &middot; Steps 4&ndash;5</span><h2>Complete, then close. <span class="light">Closed orders are frozen.</span></h2></div><div class="body"><div class="shots pair"><div class="shot"><img src="assets/jal-erp/43-order-completed.png" alt="Completed" loading="lazy" style="max-width:min(100%,1440px)"><span class="cap"><b>Completed</b>Refused while any shift entry is still a draft</span></div><div class="shot"><img src="assets/jal-erp/44-order-closed.png" alt="Closed" loading="lazy" style="max-width:min(100%,1425px)"><span class="cap"><b>Closed</b>No more entries &middot; final yield and wastage &middot; full history</span></div></div></div><span class="num">26 / 33</span></section>
+<section class="slide" id="board" data-title="Daily board"><div class="head"><span class="eyebrow">Monitoring the floor</span><h2>The daily production board, <span class="light">one row per stage.</span></h2></div><div class="body"><div class="two tall"><div class="prose"><ul><li>Target per shift, output in shifts A / B / C, day total and attainment</li><li>Yield, wastage and downtime per stage; the current shift shows <b>Running</b></li><li>Red / amber below 90% / 98% of target</li><li>Machine map &mdash; green running, amber idle, red down &mdash; and the stoppages list</li><li>&larr; &rarr; to move between days</li></ul></div><div class="shots one"><div class="shot"><img src="assets/jal-erp/50-daily-board.png" alt="JAL ERP screen" loading="lazy" style="max-width:min(100%,1425px)"></div></div></div></div><span class="num">27 / 33</span></section>
+<section class="slide" id="process" data-title="Production process"><div class="head"><span class="eyebrow">Monitoring the floor</span><h2>Twelve stage cards <span class="light">for the selected date.</span></h2></div><div class="body"><div class="shots wide"><div class="shot"><img src="assets/jal-erp/51-process-flow.png" alt="Production process" loading="lazy" style="max-width:min(100%,1440px)"><span class="cap"><b>Production process</b>Output against target, yield, wastage, machines running and active orders &middot; click a card for its orders</span></div></div></div><span class="num">28 / 33</span></section>
+<section class="slide" id="dashboard" data-title="Executive dashboard"><div class="head"><span class="eyebrow">Monitoring the floor</span><h2>The executive dashboard, <span class="light">for management.</span></h2></div><div class="body"><div class="two tall"><div class="prose"><ul><li>Bags sewn yesterday against target, month-to-date attainment</li><li>Process wastage, machine availability, bales packed</li><li>Alerts and a 14-day output chart</li><li>Yield and wastage by stage, downtime by reason</li><li>The export order book</li></ul></div><div class="shots one"><div class="shot"><img src="assets/jal-erp/52-dashboard.png" alt="JAL ERP screen" loading="lazy" style="max-width:min(100%,1425px)"></div></div></div></div><span class="num">29 / 33</span></section>
+<section class="slide" id="supervisor" data-title="Line supervisor"><div class="head"><span class="eyebrow">Monitoring the floor</span><h2>What the line supervisor <span class="light">sees.</span></h2></div><div class="body"><div class="two "><div class="prose"><ul><li>No dashboard in the menu; lands on the Production process page</li><li>A <b>New shift entry</b> button up front</li><li>Can look at Items &amp; BOM, Routings and MRP</li><li>Cannot edit BOMs or routings, create orders, or release, complete or close them</li></ul></div><div class="shots one"><div class="shot"><img src="assets/jal-erp/53-supervisor-home.png" alt="Supervisor home" loading="lazy" style="max-width:min(100%,1440px)"><span class="cap"><b>Supervisor home</b>Role-based menu</span></div></div></div></div><span class="num">30 / 33</span></section>
+<section class="slide" id="reference" data-title="Quick reference"><div class="head"><span class="eyebrow">Quick reference</span><h2>Units, checks <span class="light">and the order life cycle.</span></h2></div><div class="body"><div class="stacked"><div><h4 class="blocktitle">Order status</h4><div class="status"><b>Planned</b><i>Release &rarr;</i><b>Released</b><i>first entry posted &rarr;</i><b>In progress</b><i>Complete &rarr;</i><b>Completed</b><i>Close &rarr;</i><b>Closed</b></div></div><div class="replist"><div><h4>Units by family</h4><ul><li>Sacking &amp; sand bags: kg &rarr; pcs at cutting, pcs &rarr; bales at packing</li><li>Hessian cloth: kg &rarr; yd at weaving; 40&Prime; 10 oz = 315 g/yd</li><li>Geo soil saver: 553 g/yd, 75 yd per roll</li><li>Yarn cops: 215 g per cop, 500 per bale</li></ul></div><div><h4>Live check</h4><ul><li>Wastage above the stage alert level turns amber (batching 3%, weaving 2.5%, sewing 0.8%)</li><li>Unaccounted above 3%: waste not weighed or input mis-recorded</li><li>Red = cannot post: output + waste &gt; input + 2%, duplicate shift, missing downtime reason, future date</li></ul></div><div><h4>Common questions</h4><ul><li>Night shift C belongs to the date it starts</li><li>Posted entries cannot be edited &mdash; use Save draft if unsure</li><li>Order missing from shift entry? It must be Released or In progress</li><li>Stages fully covered by stock get no order</li></ul></div></div></div></div><span class="num">31 / 33</span></section>
+<section class="slide" id="limits" data-title="Prototype limits"><div class="head"><span class="eyebrow">Prototype v0.1</span><h2>What the prototype <span class="light">does not do yet.</span></h2></div><div class="body"><div class="steps "><div><span>01</span><h4>Stock is not reserved</h4><p>MRP runs do not reduce stock; the full ERP reserves stock per contract.</p></div><div><span>02</span><h4>No stage sequencing</h4><p>Sewing could post before cutting had produced; the full ERP issues from the previous stage&rsquo;s lots.</p></div><div><span>03</span><h4>No lot tracking</h4><p>Which raw-jute lot went into which bale is planned in SRS FR-INV-013.</p></div><div><span>04</span><h4>Illustrative data</h4><p>Machine status, export orders, FG stock, attendance and BOM quantities are demo figures.</p></div></div></div><span class="num">32 / 33</span></section>
+<section class="slide closing" id="next" data-title="Thank you"><div class="body"><div class="cv">
+  <span class="eyebrow">JAL ERP &middot; Production</span>
+  <h2 style="margin-top:10px">Thank you.</h2>
+  <p class="lede">BOM, MRP, stage orders and shift entries &mdash; one production record, from the batching house to the container.</p>
+  <p class="foot"><b>Jute Alliance <span>Limited</span></b> &middot; Manufacturing ERP &middot; prototype v0.1</p>
+</div></div><span class="num">33 / 33</span></section>
+</div>
+
+<div class="arrows"><button id="prev" type="button" aria-label="Previous slide">&larr;</button><button id="next" type="button" aria-label="Next slide">&rarr;</button></div>
+<div class="overview" id="overview" hidden><button class="ctl close" id="ovClose" type="button">Close (Esc)</button><ol><li><a href="#top"><span>01</span>Cover</a></li><li><a href="#stages"><span>02</span>Twelve stages</a></li><li><a href="#five-steps"><span>03</span>Five steps</a></li><li><a href="#flow-plan"><span>04</span>Flow · Contract to orders</a></li><li><a href="#flow-floor"><span>05</span>Flow · Release to close</a></li><li><a href="#use-cases"><span>06</span>Three use cases</a></li><li><a href="#sign-in"><span>07</span>Sign in</a></li><li><a href="#home"><span>08</span>Executive dashboard</a></li><li><a href="#uc1-bom"><span>09</span>UC1 · BOM</a></li><li><a href="#uc1-routing"><span>10</span>UC1 · Routing</a></li><li><a href="#uc1-mrp-form"><span>11</span>UC1 · Run MRP</a></li><li><a href="#uc1-mrp"><span>12</span>UC1 · MRP result</a></li><li><a href="#uc1-planned"><span>13</span>UC1 · Planned orders</a></li><li><a href="#uc1-release"><span>14</span>UC1 · Release</a></li><li><a href="#uc1-refused"><span>15</span>UC1 · Entry refused</a></li><li><a href="#uc1-batching"><span>16</span>UC1 · Batching shift</a></li><li><a href="#uc1-progress"><span>17</span>UC1 · In progress</a></li><li><a href="#uc1-sewing"><span>18</span>UC1 · Sewing shift</a></li><li><a href="#uc2-mrp"><span>19</span>UC2 · MRP</a></li><li><a href="#uc2-order"><span>20</span>UC2 · Weaving order</a></li><li><a href="#uc2-shift"><span>21</span>UC2 · Loom shift</a></li><li><a href="#uc2-progress"><span>22</span>UC2 · Availability</a></li><li><a href="#uc3-routes"><span>23</span>UC3 · Product routes</a></li><li><a href="#uc3-mrp"><span>24</span>UC3 · MRP for stock</a></li><li><a href="#uc3-shift"><span>25</span>UC3 · Winding shift</a></li><li><a href="#uc3-close"><span>26</span>UC3 · Complete & close</a></li><li><a href="#board"><span>27</span>Daily board</a></li><li><a href="#process"><span>28</span>Production process</a></li><li><a href="#dashboard"><span>29</span>Executive dashboard</a></li><li><a href="#supervisor"><span>30</span>Line supervisor</a></li><li><a href="#reference"><span>31</span>Quick reference</a></li><li><a href="#limits"><span>32</span>Prototype limits</a></li><li><a href="#next"><span>33</span>Thank you</a></li></ol></div>
+
+<script>
+
+/* ---------- theme: light by default, dark on request ---------- */
+(function(){
+  var root=document.documentElement, btn=document.getElementById('themeBtn'), saved=null;
+  try{ saved=localStorage.getItem('dm-theme'); }catch(e){}
+  function apply(t){ root.setAttribute('data-theme',t);
+    if(btn){ btn.querySelector('span').textContent = t==='dark'?'Light mode':'Dark mode'; btn.setAttribute('aria-label', t==='dark'?'Switch to light mode':'Switch to dark mode'); }
+    try{ dispatchEvent(new Event('dm-theme')); }catch(e){} }
+  apply(saved==='dark'?'dark':'light');
+  if(btn) btn.addEventListener('click',function(){ var t=root.getAttribute('data-theme')==='dark'?'light':'dark'; apply(t); try{ localStorage.setItem('dm-theme',t); }catch(e){} });
+})();
+
+/* ---------- hero: wireframe globe + perspective grid (canvas) ---------- */
+(function(){
+  var cv=document.getElementById('globe'); if(!cv) return;
+  var ctx=cv.getContext('2d'); var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var t=0, W=0,H=0, dpr=Math.min(devicePixelRatio||1,2);
+  function size(){ var r=cv.parentNode.getBoundingClientRect(); W=r.width; H=r.height; cv.width=W*dpr; cv.height=H*dpr; ctx.setTransform(dpr,0,0,dpr,0,0); }
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    // perspective grid
+    var horizon=H*0.42, vanish=W*0.55;
+    ctx.strokeStyle=(getComputedStyle(cv).getPropertyValue('--globe-grid').trim()||'rgba(255,255,255,0.10)'); ctx.lineWidth=1;
+    for(var i=-14;i<=14;i++){ var x=vanish+i*W*0.11; ctx.beginPath(); ctx.moveTo(vanish+(x-vanish)*0.08,horizon); ctx.lineTo(x*1.9-vanish*0.9,H*1.4); ctx.stroke(); }
+    for(var j=0;j<14;j++){ var f=Math.pow(j/13,2.2); var y=horizon+f*(H*1.1); ctx.beginPath(); ctx.moveTo(-W*0.3,y); ctx.lineTo(W*1.4,y); ctx.globalAlpha=0.35+f*0.65; ctx.stroke(); }
+    ctx.globalAlpha=1;
+    // globe
+    var cx=W*0.80, cy=H*0.46, R=Math.min(W*0.22,H*0.42); if(W<900){cx=W*0.78; cy=H*0.82; R=Math.min(W*0.28,160);}
+    var rot=t*0.15, tilt=0.42;
+    function P(lat,lon){ var x=Math.cos(lat)*Math.cos(lon+rot), y=Math.sin(lat), z=Math.cos(lat)*Math.sin(lon+rot);
+      var y2=y*Math.cos(tilt)-z*Math.sin(tilt), z2=y*Math.sin(tilt)+z*Math.cos(tilt); return {x:cx+x*R, y:cy-y2*R, z:z2}; }
+    function seg(a,b){ var al=0.18+0.55*((a.z+b.z)/2+1)/2; ctx.strokeStyle='rgba(242,107,29,'+al+')'; ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke(); }
+    ctx.lineWidth=1;
+    var k;
+    for(var la=-75;la<=75;la+=15){ var lat=la*Math.PI/180, prev=null; for(k=0;k<=72;k++){ var p=P(lat,k/72*Math.PI*2); if(prev) seg(prev,p); prev=p; } }
+    for(var lo=0;lo<180;lo+=15){ var lon=lo*Math.PI/180, pv=null; for(k=0;k<=48;k++){ var q=P(-Math.PI/2+k/48*Math.PI,lon); if(pv) seg(pv,q); pv=q; } }
+    // radial ticks
+    ctx.strokeStyle='rgba(242,107,29,0.35)';
+    for(k=0;k<90;k++){ var a=k/90*Math.PI*2+t*0.05, r1=R*1.02, r2=R*(1.06+((k*7)%5)*0.03); ctx.beginPath(); ctx.moveTo(cx+Math.cos(a)*r1,cy+Math.sin(a)*r1); ctx.lineTo(cx+Math.cos(a)*r2,cy+Math.sin(a)*r2); ctx.stroke(); }
+  }
+  function loop(){ t+=0.016; draw(); if(!reduce) requestAnimationFrame(loop); }
+  size(); addEventListener('resize',function(){ size(); if(reduce) draw(); }); addEventListener('dm-theme',function(){ if(reduce) draw(); }); loop();
+})();
+
+/* ---------- hub visualization ---------- */
+(function(){
+  var el=document.getElementById('hub'); if(!el) return;
+  var mods=[
+    {id:'gl',n:'General\nLedger',d:'var(--c-fin)'},{id:'ap',n:'Accounts\nPayable',d:'var(--c-fin)'},{id:'ar',n:'Accounts\nReceivable',d:'var(--c-fin)'},{id:'fa',n:'Fixed\nAssets',d:'var(--c-fin)'},
+    {id:'po',n:'Purchase\nOrder',d:'var(--c-sc)'},{id:'lc',n:'L/C\nManagement',d:'var(--c-sc)'},{id:'inv',n:'Inventory',d:'var(--c-sc)'},{id:'op',n:'Order\nProcessing',d:'var(--c-sc)'},
+    {id:'bom',n:'Bill of\nMaterials',d:'var(--c-mfg)'},{id:'mo',n:'Manufacturing\nOrder',d:'var(--c-mfg)'},
+    {id:'hr',n:'HR\nManagement',d:'var(--c-hr)'},{id:'pay',n:'Payroll',d:'var(--c-hr)'},{id:'fleet',n:'Fleet\nManagement',d:'var(--c-hr)'},
+    {id:'sales',n:'Sales\nManagement',d:'var(--c-crm)'},{id:'support',n:'Customer\nSupport',d:'var(--c-crm)'}];
+  var links=[['po','inv'],['po','ap'],['po','fa'],['po','lc'],['lc','inv'],['inv','op'],['op','ar'],['ap','gl'],['ar','gl'],['fa','gl'],['bom','mo'],['mo','inv'],['mo','gl'],['hr','pay'],['pay','gl'],['lc','gl'],['po','gl'],['sales','support']];
+  var S=720, c=S/2, R=262, r=42;
+  var pos={}; mods.forEach(function(m,i){ var a=-Math.PI/2+i/mods.length*Math.PI*2; pos[m.id]={x:c+Math.cos(a)*R,y:c+Math.sin(a)*R,m:m}; });
+  var s='<svg viewBox="0 0 '+S+' '+S+'" width="'+S+'" height="'+S+'" role="img" aria-label="Suite architecture: Cross Application at the center connected to fifteen modules, with integration links between modules">';
+  s+='<defs><radialGradient id="hg" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#F26B1D" stop-opacity=".55"/><stop offset="1" stop-color="#F26B1D" stop-opacity="0"/></radialGradient><linearGradient id="hc" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F26B1D"/><stop offset="1" stop-color="#F5A524"/></linearGradient></defs>';
+  s+='<path id="ringp" d="M'+c+' '+(c-338)+' a338 338 0 1 1 -0.01 0" fill="none"/>';
+  s+='<circle cx="'+c+'" cy="'+c+'" r="'+(R+r+10)+'" fill="none" stroke="#F5A524" stroke-opacity=".55" stroke-width="1.5" stroke-dasharray="6 6"/>';
+  s+='<text font-family="JetBrains Mono,monospace" font-size="10" letter-spacing="3" fill="var(--accent-text)"><textPath href="#ringp" startOffset="2%">MANAGEMENT DASHBOARD  ·  KPIs FROM EVERY MODULE  ·  COST VISIBILITY ACROSS THE SUITE  ·  MANAGEMENT DASHBOARD  ·  KPIs FROM EVERY MODULE  ·  COST VISIBILITY</textPath></text>';
+  s+='<circle cx="'+c+'" cy="'+c+'" r="'+R+'" fill="none" stroke="var(--hub-ring)" stroke-dasharray="3 6"/>';
+  s+='<circle cx="'+c+'" cy="'+c+'" r="150" fill="url(#hg)"/>';
+  links.forEach(function(l){ var a=pos[l[0]],b=pos[l[1]]; var mx=(a.x+b.x)/2, my=(a.y+b.y)/2; var qx=c+(mx-c)*0.35, qy=c+(my-c)*0.35;
+    s+='<path d="M'+a.x+' '+a.y+' Q'+qx+' '+qy+' '+b.x+' '+b.y+'" fill="none" stroke="#F26B1D" stroke-opacity=".55" stroke-width="1.4" stroke-dasharray="4 5" class="edge" style="stroke:#F26B1D;stroke-opacity:.6"/>'; });
+  mods.forEach(function(m){ var p=pos[m.id]; s+='<line x1="'+c+'" y1="'+c+'" x2="'+p.x+'" y2="'+p.y+'" stroke="var(--hub-line)" stroke-width="1"/>'; });
+  mods.forEach(function(m){ var p=pos[m.id]; var lines=m.n.split('\n');
+    s+='<a href="#'+m.id+'"><g><circle cx="'+p.x+'" cy="'+p.y+'" r="'+r+'" fill="var(--hub-node)" stroke="'+m.d+'" stroke-width="2"/>';
+    s+='<text x="'+p.x+'" y="'+(p.y-(lines.length-1)*7+4)+'" text-anchor="middle" fill="var(--hub-text)" font-size="11.5" font-weight="600" font-family="Manrope,Segoe UI,sans-serif">';
+    lines.forEach(function(t,i){ s+='<tspan x="'+p.x+'" dy="'+(i?14:0)+'">'+t+'</tspan>'; }); s+='</text></g></a>'; });
+  s+='<circle cx="'+c+'" cy="'+c+'" r="78" fill="url(#hc)"/><circle cx="'+c+'" cy="'+c+'" r="78" fill="none" stroke="#fff" stroke-opacity=".35" stroke-width="2"/>';
+  s+='<text x="'+c+'" y="'+(c-6)+'" text-anchor="middle" fill="#fff" font-size="14" font-weight="800" font-family="Manrope,Segoe UI,sans-serif">CROSS</text><text x="'+c+'" y="'+(c+12)+'" text-anchor="middle" fill="#fff" font-size="14" font-weight="800" font-family="Manrope,Segoe UI,sans-serif">APPLICATION</text><text x="'+c+'" y="'+(c+30)+'" text-anchor="middle" fill="rgba(255,255,255,.85)" font-size="9" letter-spacing="2" font-family="JetBrains Mono,monospace">SHARED MASTER DATA</text>';
+  s+='</svg>'; el.innerHTML=s;
+})();
+
+/* ---------- process flow renderer ---------- */
+(function(){
+  var W=158,H=60,GX=58,GY=42,PX=14,PY=14;
+  function wrap(t,max){ var w=t.split(' '),lines=[],cur=''; w.forEach(function(x){ if((cur+' '+x).trim().length>max){ lines.push(cur.trim()); cur=x; } else cur+=' '+x; }); if(cur.trim()) lines.push(cur.trim()); return lines.slice(0,3); }
+  function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;'); }
+  function render(fig,spec){
+    var nodes={}, maxC=0,maxR=0;
+    spec.n.forEach(function(n){ n.x=PX+n.c*(W+GX); n.y=PY+n.r*(H+GY); nodes[n.id]=n; maxC=Math.max(maxC,n.c); maxR=Math.max(maxR,n.r); });
+    var TW=PX*2+(maxC+1)*W+maxC*GX, TH=PY*2+(maxR+1)*H+maxR*GY;
+    var s='<svg viewBox="0 0 '+TW+' '+TH+'" width="'+TW+'" height="'+TH+'" role="img" aria-label="'+esc(spec.alt||'Process flow')+'">';
+    s+='<defs><linearGradient id="gOut" x1="0" x2="1"><stop offset="0" stop-color="#F26B1D"/><stop offset="1" stop-color="#F5A524"/></linearGradient><marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#F26B1D"/></marker></defs>';
+    spec.e.forEach(function(e){ var a=nodes[e[0]],b=nodes[e[1]],lab=e[2]; var d,lx,ly;
+      if(a.c===b.c){ var down=b.r>a.r; var y1=down?a.y+H:a.y, y2=down?b.y:b.y+H; var x=a.x+W/2; d='M'+x+' '+y1+' L'+x+' '+y2; lx=x+8; ly=(y1+y2)/2; }
+      else if(b.c>a.c){ var sx=a.x+W, sy=a.y+H/2, tx=b.x, ty=b.y+H/2, mx=(sx+tx)/2; d=(sy===ty)?'M'+sx+' '+sy+' L'+tx+' '+ty:'M'+sx+' '+sy+' L'+mx+' '+sy+' L'+mx+' '+ty+' L'+tx+' '+ty; lx=mx; ly=(sy===ty)?sy-9:(sy+ty)/2; }
+      else { var sx2=a.x, sy2=a.y+H/2, tx2=b.x+W, ty2=b.y+H/2, mx2=(sx2+tx2)/2; d=(sy2===ty2)?'M'+sx2+' '+sy2+' L'+tx2+' '+ty2:'M'+sx2+' '+sy2+' L'+mx2+' '+sy2+' L'+mx2+' '+ty2+' L'+tx2+' '+ty2; lx=mx2; ly=(sy2===ty2)?sy2-9:(sy2+ty2)/2; }
+      s+='<path class="edge" d="'+d+'" marker-end="url(#arr)"/>';
+      if(lab){ var w=lab.length*6.4+10; s+='<rect class="elbg" x="'+(lx-w/2)+'" y="'+(ly-8)+'" width="'+w+'" height="15" rx="4"/><text class="elabel" x="'+lx+'" y="'+(ly+3)+'" text-anchor="middle">'+esc(lab)+'</text>'; }
+    });
+    spec.n.forEach(function(n){ var cls='n-'+n.t, x=n.x,y=n.y;
+      if(n.t==='dec'){ s+='<path class="'+cls+'" stroke-width="1.5" d="M'+(x+10)+' '+y+' H'+(x+W-10)+' L'+(x+W)+' '+(y+H/2)+' L'+(x+W-10)+' '+(y+H)+' H'+(x+10)+' L'+x+' '+(y+H/2)+' Z"/>'; }
+      else if(n.t==='out'){ s+='<rect class="'+cls+'" x="'+x+'" y="'+y+'" width="'+W+'" height="'+H+'" rx="'+(H/2)+'"/>'; }
+      else if(n.t==='db'){ s+='<rect class="'+cls+'" stroke-width="1.5" x="'+x+'" y="'+y+'" width="'+W+'" height="'+H+'" rx="8"/><path d="M'+(x+1)+' '+(y+10)+' Q'+(x+W/2)+' '+(y+20)+' '+(x+W-1)+' '+(y+10)+'" fill="none" stroke="var(--node-db-stroke)" stroke-width="1.2"/>'; }
+      else if(n.t==='in'){ s+='<rect class="'+cls+'" stroke-width="1.5" x="'+x+'" y="'+y+'" width="'+W+'" height="'+H+'" rx="8"/><rect x="'+x+'" y="'+(y+10)+'" width="4" height="'+(H-20)+'" rx="2" fill="#F26B1D"/>'; }
+      else { s+='<rect class="'+cls+'" stroke-width="1.5" x="'+x+'" y="'+y+'" width="'+W+'" height="'+H+'" rx="8"/>'; }
+      var lines=wrap(n.l,22); var ty=y+H/2-(lines.length-1)*7+4;
+      s+='<text class="ntext" x="'+(x+W/2)+'" y="'+ty+'" text-anchor="middle"'+(n.t==='out'?' fill="var(--on-out)" font-weight="600"':'')+'>';
+      lines.forEach(function(t,i){ s+='<tspan x="'+(x+W/2)+'" dy="'+(i?14:0)+'">'+esc(t)+'</tspan>'; }); s+='</text>';
+      if(n.g){ s+='<text class="ntag" x="'+(x+W/2)+'" y="'+(y+H+12)+'" text-anchor="middle">'+esc(n.g.toUpperCase())+'</text>'; }
+    });
+    s+='</svg>';
+    fig.querySelector('.canvas').innerHTML=s;
+    fig.insertAdjacentHTML('beforeend','<div class="key"><span><i style="background:var(--node-in);border:1px solid var(--node-in-stroke);border-left:3px solid #F26B1D"></i>Entry</span><span><i style="background:var(--node-proc);border:1px solid var(--node-proc-stroke)"></i>Process</span><span><i style="background:var(--node-dec);border:1px solid var(--node-dec-stroke)"></i>Decision</span><span><i style="background:var(--node-db);border:1px solid var(--node-db-stroke)"></i>Database</span><span><i style="background:linear-gradient(90deg,#F26B1D,#F5A524)"></i>Outcome</span></div>');
+  }
+  var F={};
+  F.jalplan={alt:'Contract to orders: a sales contract or a make-to-stock quantity feeds MRP, which reads the BOM and routing, nets each stage against stock, skips stages covered by stock, and creates planned stage orders and purchase lines',n:[
+    {id:'sc',l:'Sales contract line',t:'in',c:0,r:0},{id:'mts',l:'Make-to-stock quantity',t:'in',c:0,r:1},
+    {id:'bom',l:'BOM and routing',t:'db',c:1,r:2},{id:'mrp',l:'MRP explosion, scheduled back from ship-by',t:'proc',c:1,r:0},
+    {id:'stk',l:'Stock on hand',t:'db',c:2,r:2},{id:'net',l:'Stage covered by stock?',t:'dec',c:2,r:0},
+    {id:'cov',l:'Stage shown as covered, no order',t:'out',c:3,r:1},{id:'po',l:'Planned stage orders',t:'out',c:4,r:0},
+    {id:'pr',l:'Purchase lines for jute and materials',t:'out',c:4,r:2}],
+    e:[['sc','mrp'],['mts','mrp'],['bom','mrp'],['mrp','net'],['stk','net'],['net','cov','yes'],['net','po','no'],['mrp','pr']]};
+  F.jalfloor={alt:'Release to close: a planned order is released, a shift entry is entered and checked live; a failed check is refused, a passing one posts, the first posted entry starts the order, and once no drafts remain it is completed and closed',n:[
+    {id:'pl',l:'Planned order',t:'in',c:0,r:0},{id:'rel',l:'Release',t:'proc',c:1,r:0},{id:'se',l:'Shift entry: input, output, waste, downtime',t:'proc',c:2,r:0},
+    {id:'ok',l:'Live check passes?',t:'dec',c:3,r:0},{id:'ref',l:'Entry refused, correct and retry',t:'out',c:3,r:1},
+    {id:'ip',l:'Posted, order in progress',t:'proc',c:4,r:0},{id:'dr',l:'Any drafts left?',t:'dec',c:5,r:0},
+    {id:'clr',l:'Post or delete drafts',t:'out',c:5,r:1},{id:'cl',l:'Completed, then closed',t:'out',c:6,r:0}],
+    e:[['pl','rel'],['rel','se'],['se','ok'],['ok','ref','no'],['ok','ip','yes'],['ip','dr'],['dr','clr','yes'],['dr','cl','no']]};
+  document.querySelectorAll('figure.flow[data-flow]').forEach(function(fig){ var k=fig.getAttribute('data-flow'); if(F[k]) render(fig,F[k]); });
+})();
+
+/* ---------- rail highlighting ---------- */
+(function(){
+  var links=Array.prototype.slice.call(document.querySelectorAll('.rail a[href^="#"]')); if(!links.length||!('IntersectionObserver' in window)) return;
+  var byId={}; links.forEach(function(a){ byId[a.getAttribute('href').slice(1)]=a; }); var cur=null;
+  var io=new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting){ var a=byId[e.target.id]; if(!a) return; if(cur) cur.classList.remove('active'); a.classList.add('active'); cur=a; } }); },{rootMargin:'-15% 0px -70% 0px'});
+  Object.keys(byId).forEach(function(id){ var el=document.getElementById(id); if(el) io.observe(el); });
+})();
+
+/* ---------- deck navigation ---------- */
+(function(){
+  var deck=document.getElementById('deck'), slides=Array.prototype.slice.call(document.querySelectorAll('.slide'));
+  var counter=document.getElementById('counter'), bar=document.getElementById('bar'), ov=document.getElementById('overview');
+  var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function idx(){ var h=deck.clientHeight||1; return Math.max(0,Math.min(slides.length-1,Math.round(deck.scrollTop/h))); }
+  function go(i){ i=Math.max(0,Math.min(slides.length-1,i));
+    deck.style.scrollSnapType='none'; deck.scrollTop=slides[i].offsetTop; update();
+    setTimeout(function(){ deck.style.scrollSnapType=''; update(); },0); }
+  function update(){ var i=idx(); counter.textContent=(i+1)+' / '+slides.length; bar.style.width=((i+1)/slides.length*100)+'%';
+    var id=slides[i].id; try{ if(history.replaceState) history.replaceState(null,'','#'+id); }catch(e){}
+    ov.querySelectorAll('a').forEach(function(a){ a.classList.toggle('current', a.getAttribute('href')==='#'+id); });
+    if(!slides[i].classList.contains('in')){ slides.forEach(function(sl){ sl.classList.remove('in'); }); slides[i].classList.add('in'); } }
+  var raf; deck.addEventListener('scroll',function(){ cancelAnimationFrame(raf); raf=requestAnimationFrame(update); });
+  document.getElementById('prev').addEventListener('click',function(){ go(idx()-1); });
+  document.getElementById('next').addEventListener('click',function(){ go(idx()+1); });
+  function toggleOv(force){ var show=(force===undefined)?ov.hidden:force; ov.hidden=!show; if(show){ var c=ov.querySelector('a.current'); if(c) c.focus(); } }
+  document.getElementById('gridBtn').addEventListener('click',function(){ toggleOv(); });
+  document.getElementById('ovClose').addEventListener('click',function(){ toggleOv(false); });
+  ov.addEventListener('click',function(e){ var a=e.target.closest('a'); if(a){ e.preventDefault(); toggleOv(false); var t=document.querySelector(a.getAttribute('href')); if(t) go(slides.indexOf(t)); } });
+  function fs(){ var d=document.documentElement; if(!document.fullscreenElement){ if(d.requestFullscreen) d.requestFullscreen(); } else if(document.exitFullscreen) document.exitFullscreen(); }
+  document.getElementById('fsBtn').addEventListener('click',fs);
+  addEventListener('keydown',function(e){ var t=e.target.tagName; if(t==='INPUT'||t==='TEXTAREA') return;
+    if(!ov.hidden && e.key==='Escape'){ toggleOv(false); return; }
+    switch(e.key){
+      case 'ArrowRight': case 'ArrowDown': case 'PageDown': case ' ': if(t==='BUTTON'&&e.key===' ') return; e.preventDefault(); go(idx()+1); break;
+      case 'ArrowLeft': case 'ArrowUp': case 'PageUp': e.preventDefault(); go(idx()-1); break;
+      case 'Home': e.preventDefault(); go(0); break;
+      case 'End': e.preventDefault(); go(slides.length-1); break;
+      case 'g': case 'G': toggleOv(); break;
+      case 'f': case 'F': fs(); break;
+    } });
+  // in-slide anchor links (hub, chips) should jump slides inside the deck
+  document.addEventListener('click',function(e){ var a=e.target.closest('a[href^="#"]'); if(!a||ov.contains(a)) return; var t=document.querySelector(a.getAttribute('href')); if(t&&t.classList.contains('slide')){ e.preventDefault(); go(slides.indexOf(t)); } });
+  try{ if('scrollRestoration' in history) history.scrollRestoration='manual'; }catch(e){}
+  var h=location.hash&&document.querySelector(location.hash); setTimeout(function(){ if(h&&h.classList.contains('slide')) go(slides.indexOf(h)); else go(0); },0);
+  addEventListener('resize',function(){ var i=idx(); deck.scrollTop=slides[i].offsetTop; update(); });
+  update();
+})();
+
+
+/* ---------- publish each slide's usable height ---------- */
+(function(){
+  function measure(){
+    Array.prototype.forEach.call(document.querySelectorAll('.slide'), function(s){
+      var b = s.querySelector('.body'); if(!b) return;
+      var h = b.clientHeight;
+      if(h > 60) s.style.setProperty('--bh', h + 'px');
+    });
+  }
+  addEventListener('resize', measure);
+  addEventListener('load', measure);
+  if(document.fonts && document.fonts.ready) document.fonts.ready.then(measure);
+  measure();
+})();
+</script>
+<script src="brand.js" defer></script>
+<script src="slide-names.js" defer></script>
